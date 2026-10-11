@@ -7,6 +7,7 @@ public class ItemEmprestimo {
     private LocalDate dataPrevistaDevolucao;
     private LocalDate dataEfetivaDevolucao;
     private StatusItemEmprestimo statusItemEmprestimo;
+    private Exemplar exemplar;
 
     public enum StatusItemEmprestimo {
         EMPRESTADO("Emprestado"),
@@ -28,10 +29,13 @@ public class ItemEmprestimo {
     }
 
     public ItemEmprestimo(int idItemEmprestimo, Emprestimo emprestimo,
-                          LocalDate dataPrevistaDevolucao, LocalDate dataEfetivaDevolucao,
+                          Exemplar exemplar,
+                          LocalDate dataPrevistaDevolucao,
+                          LocalDate dataEfetivaDevolucao,
                           StatusItemEmprestimo statusItemEmprestimo) {
         this.idItemEmprestimo = idItemEmprestimo;
         this.emprestimo = emprestimo;
+        this.exemplar = exemplar;
         this.dataPrevistaDevolucao = dataPrevistaDevolucao;
         this.dataEfetivaDevolucao = dataEfetivaDevolucao;
         this.statusItemEmprestimo = statusItemEmprestimo;
@@ -77,11 +81,38 @@ public class ItemEmprestimo {
         this.statusItemEmprestimo = statusItemEmprestimo;
     }
 
+    public Exemplar getExemplar() { // permite consultar qual exemplar está associado ao item
+        return exemplar;
+    }
+
+    public void setExemplar(Exemplar exemplar) { // permite definir qual exemplar foi emprestado
+        this.exemplar = exemplar;
+    }
+
+    // Devolução de item do empréstimo
+    public boolean devolver(LocalDate dataDevolucao) {
+        if (dataDevolucao == null || exemplar == null || // não permite devolver item sem data ou sem exemplar associado
+                exemplar.getSituacao() != Exemplar.Situacao.EMPRESTADO) { //exemplar só pode ser devolvido se estiver marcado como emprestado
+            return false;
+        }
+
+        if (statusItemEmprestimo == StatusItemEmprestimo.DEVOLVIDO) {
+            return false; // impede que um item já devolvido seja devolvido novamente
+        }
+
+        dataEfetivaDevolucao = dataDevolucao; // guarda a data efetiva da devolução
+        statusItemEmprestimo = StatusItemEmprestimo.DEVOLVIDO; // marca o item como DEVOLVIDO.
+        exemplar.setSituacao(Exemplar.Situacao.DISPONIVEL); // libera o exemplar para novo empréstimo
+
+        return true;
+    }
+
     @Override
     public String toString() {
         return "ItemEmprestimo [" +
                 "idItemEmprestimo=" + idItemEmprestimo +
                 ", emprestimo=" + emprestimo +
+                ", exemplar=" + exemplar +
                 ", dataPrevistaDevolucao=" + dataPrevistaDevolucao +
                 ", dataEfetivaDevolucao=" + dataEfetivaDevolucao +
                 ", statusItemEmprestimo=" + statusItemEmprestimo +
