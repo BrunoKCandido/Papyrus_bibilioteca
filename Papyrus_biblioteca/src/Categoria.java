@@ -2,6 +2,7 @@ public class Categoria {
 
     private int idCategoria;
     private String nomeCategoria;
+    private Livro livro;; //Livro associado à categoria
 
     public Categoria() {
     }
@@ -25,6 +26,14 @@ public class Categoria {
 
     public void setNomeCategoria(String nomeCategoria) {
         this.nomeCategoria = nomeCategoria;
+    }
+
+    public void setLivro(Livro livro) {
+        this.livro = livro;
+    }
+
+    public Livro getLivro() {
+        return livro;
     }
 
     @Override

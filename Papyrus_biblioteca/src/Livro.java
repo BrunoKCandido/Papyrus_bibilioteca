@@ -9,21 +9,21 @@ public class Livro {
     private String edicao;
     private int anoPublicacao;
     private String isbn;
-    private Categoria categoria;
+    private List<Categoria> categorias = new ArrayList<>(); //Lista de categorias do livro
     private List<Autor> autores = new ArrayList<>();
 
     public Livro() {
     }
 
     public Livro(int idLivro, String titulo, String editora, String edicao,
-                 int anoPublicacao, String isbn, Categoria categoria) {
+                 int anoPublicacao, String isbn) {
         this.idLivro = idLivro;
         this.titulo = titulo;
         this.editora = editora;
         this.edicao = edicao;
         this.anoPublicacao = anoPublicacao;
         this.isbn = isbn;
-        this.categoria = categoria;
+        this.autores = new ArrayList<>();
     }
 
     public int getIdLivro() {
@@ -74,12 +74,20 @@ public class Livro {
         this.isbn = isbn;
     }
 
-    public Categoria getCategoria() {
-        return categoria;
+    public List<Categoria> getCategoria() { return categorias; }
+
+    //Metodo para adicionar Categoria a lista de categorias do livro
+    //(1) adiciona a categoria à lista de categorias do livro
+    //(2) associa o livro (this) a categoria
+    public void addCategoria(Categoria categoria) {
+        categorias.add(categoria);
+        categoria.setLivro(this);
     }
 
-    public void setCategoria(Categoria categoria) {
-        this.categoria = categoria;
+    //Metodo para remover uma categoria da lista, mas não a exclui da memória
+    public void remove(Categoria categoria) {
+        categorias.remove(categoria);
+        categoria.setLivro(null);
     }
 
     public List<Autor> getAutores() {
@@ -116,7 +124,7 @@ public class Livro {
                 ", edicao='" + edicao + '\'' +
                 ", anoPublicacao=" + anoPublicacao +
                 ", isbn='" + isbn + '\'' +
-                ", categoria=" + categoria +
+                ", categorias=" + categorias +
                 ", autores=" + autores +
                 ']';
     }
