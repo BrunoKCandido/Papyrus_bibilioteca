@@ -11,6 +11,7 @@ public class Livro {
     private String isbn;
     private List<Categoria> categorias = new ArrayList<>(); //Lista de categorias do livro
     private List<Autor> autores = new ArrayList<>();
+    private List<Exemplar> exemplares = new ArrayList<>(); //associação por composição com Exemplar
 
     public Livro() {
     }
@@ -113,6 +114,18 @@ public class Livro {
 
     public void removeAutor(Autor autor) {
         this.autores.remove(autor);
+    }
+
+    //Na composição apenas o metodo getExemplar deve ser implementado (não tem set)
+    //(1)Metodo para consultar exemplares
+    public List<Exemplar> getExemplares() { return exemplares; }
+
+    //(2)Metodo para adicionar exemplares
+    public void addExemplar(Exemplar exemplar) {
+        if (exemplar != null) {
+            exemplar.setLivro(this);
+            exemplares.add(exemplar);
+        }
     }
 
     @Override
