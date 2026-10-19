@@ -4,8 +4,9 @@ public class Exemplar {
     private Livro livro;
     private String numeroTombo;
     private String localizacaoEstante;
+
     private EstadoConservacao estadoConservacao;
-    private Situacao situacao;
+    private Situacao situacao = Situacao.DISPONIVEL;
 
     public enum EstadoConservacao {
         NOVO("Novo"),

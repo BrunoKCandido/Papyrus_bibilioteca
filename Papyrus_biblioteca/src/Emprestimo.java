@@ -3,7 +3,7 @@ import java.time.LocalDate;
 public class Emprestimo {
 
     private int idEmprestimo;
-    private Usuario usuario;
+    private Usuario usuario; // atributo de associação unidirecional com a classe Usuario
     private LocalDate dataEmprestimo;
 
     public Emprestimo() {

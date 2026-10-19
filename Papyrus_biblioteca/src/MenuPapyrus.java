@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class MenuPapyrus {
@@ -5,11 +7,101 @@ public class MenuPapyrus {
     private String nome;
     private String tipo;
     private Scanner scanner;
+    private List<Autor> autores = new ArrayList<>();
+    private List<Categoria> categorias = new ArrayList<>();
+    private Acervo acervo = new Acervo();
+
+    private void exibirResultados(List<Livro> resultados) {
+        if (resultados.isEmpty()) {
+            System.out.println("Nenhum livro encontrado.");
+            return;
+        }
+
+        System.out.println("\n--- LIVROS ENCONTRADOS ---");
+
+        for (Livro livro : resultados) {
+            System.out.println(livro);
+        }
+    }
+
+    private void pesquisarLivros() {
+        System.out.println("\n--- PESQUISAR LIVROS ---");
+        System.out.println("1. Pesquisar por ID");
+        System.out.println("2. Pesquisar por título");
+        System.out.println("0. Voltar");
+        System.out.print("Opção: ");
+
+        int opcao = Integer.parseInt(scanner.nextLine());
+
+        switch (opcao) {
+            case 1:
+                System.out.print("Digite o ID do livro: ");
+                int id = Integer.parseInt(scanner.nextLine());
+
+                Livro livro = acervo.buscarLivroPorId(id);
+
+                if (livro != null) {
+                    List<Livro> resultado = new ArrayList<>();
+                    resultado.add(livro);
+                    exibirResultados(resultado);
+                } else {
+                    System.out.println("Livro não encontrado.");
+                }
+                break;
+
+            case 2:
+                System.out.print("Digite o título ou parte dele: ");
+                String titulo = scanner.nextLine();
+
+                List<Livro> resultados = acervo.buscarLivrosPorTitulo(titulo);
+                exibirResultados(resultados);
+                break;
+
+            case 0:
+                System.out.println("Voltando...");
+                break;
+
+            default:
+                System.out.println("Opção inválida.");
+        }
+    }
 
     public MenuPapyrus() {
         this.scanner = new Scanner(System.in);
         this.nome = "";
         this.tipo = "";
+    }
+
+    private void cadastrarLivro() {
+        System.out.println("\n--- CADASTRAR LIVRO ---");
+
+        System.out.print("ID do livro: ");
+        int id = Integer.parseInt(scanner.nextLine());
+
+        System.out.print("Título: ");
+        String titulo = scanner.nextLine();
+
+        System.out.print("Editora: ");
+        String editora = scanner.nextLine();
+
+        System.out.print("Edição: ");
+        String edicao = scanner.nextLine();
+
+        System.out.print("Ano de publicação: ");
+        int ano = Integer.parseInt(scanner.nextLine());
+
+        System.out.print("ISBN: ");
+        String isbn = scanner.nextLine();
+
+        Livro livro = new Livro(
+                id, titulo, editora, edicao, ano, isbn
+        );
+
+        if (acervo.cadastrarLivro(livro)) {
+            System.out.println("Livro cadastrado com sucesso!");
+        } else {
+            System.out.println("Não foi possível cadastrar o livro.");
+        }
     }
 
     public String getNome() {
@@ -155,6 +247,8 @@ public class MenuPapyrus {
             System.out.println("2. Gerenciar Livros");
             System.out.println("3. Gerenciar Categorias");
             System.out.println("4. Relatorios");
+            System.out.println("5. Pesquisar Livros");
+            System.out.println("6. Cadastrar Livro");
             System.out.println("0. Voltar ao Menu Principal");
             System.out.print("Opcao: ");
             opcao = Integer.parseInt(scanner.nextLine());
@@ -167,6 +261,10 @@ public class MenuPapyrus {
                 System.out.println(">> Gerenciando categorias...");
             } else if (opcao == 4) {
                 System.out.println(">> Gerando relatorios...");
+            } else if (opcao == 5) {
+                pesquisarLivros();
+            } else if (opcao == 6) {
+                cadastrarLivro();
             } else if (opcao == 0) {
                 System.out.println("Voltando ao menu principal...");
             } else {
@@ -179,3 +277,4 @@ public class MenuPapyrus {
     public String toString() {
         return "Usuario: " + getNome() + " | Tipo: " + getTipo();
     }
+}

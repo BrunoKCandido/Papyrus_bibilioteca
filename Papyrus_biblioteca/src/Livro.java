@@ -81,14 +81,17 @@ public class Livro {
     //(1) adiciona a categoria à lista de categorias do livro
     //(2) associa o livro (this) a categoria
     public void addCategoria(Categoria categoria) {
-        categorias.add(categoria);
-        categoria.setLivro(this);
+        if (categoria != null && !categorias.contains(categoria)) {
+            categorias.add(categoria);
+            categoria.setLivro(this);
+        }
     }
 
     //Metodo para remover uma categoria da lista, mas não a exclui da memória
-    public void remove(Categoria categoria) {
-        categorias.remove(categoria);
-        categoria.setLivro(null);
+    public void removeCategoria(Categoria categoria) {
+        if (categoria != null && categorias.remove(categoria)) {
+            categoria.setLivro(null);
+        }
     }
 
     public List<Autor> getAutores() {
