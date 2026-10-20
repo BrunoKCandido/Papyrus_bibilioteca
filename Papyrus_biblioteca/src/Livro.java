@@ -24,7 +24,6 @@ public class Livro {
         this.edicao = edicao;
         this.anoPublicacao = anoPublicacao;
         this.isbn = isbn;
-        this.autores = new ArrayList<>();
     }
 
     public int getIdLivro() {
@@ -77,20 +76,17 @@ public class Livro {
 
     public List<Categoria> getCategoria() { return categorias; }
 
-    //Metodo para adicionar Categoria a lista de categorias do livro
-    //(1) adiciona a categoria à lista de categorias do livro
-    //(2) associa o livro (this) a categoria
+    //Metodo para adicionar uma categoria ao livro
     public void addCategoria(Categoria categoria) {
         if (categoria != null && !categorias.contains(categoria)) {
             categorias.add(categoria);
-            categoria.setLivro(this);
         }
     }
 
-    //Metodo para remover uma categoria da lista, mas não a exclui da memória
+    //Metodo para remover uma categoria do livro
     public void removeCategoria(Categoria categoria) {
-        if (categoria != null && categorias.remove(categoria)) {
-            categoria.setLivro(null);
+        if (categoria != null) {
+            categorias.remove(categoria);
         }
     }
 
@@ -98,21 +94,15 @@ public class Livro {
         return autores;
     }
 
-    public void setAutores(List<Autor> autores) {
-        if (autores != null && autores.size() > 3) {
-            throw new IllegalArgumentException("Um livro pode ter no máximo 3 autores.");
-        }
-        this.autores = autores;
-    }
-
     public void addAutor(Autor autor) {
+        if (autor == null || this.autores.contains(autor)) {
+            return;
+        }
         if (this.autores.size() >= 3) {
             System.out.println("Não é possível adicionar mais de 3 autores ao livro.");
             return;
         }
-        if (autor != null && !this.autores.contains(autor)) {
-            this.autores.add(autor);
-        }
+        this.autores.add(autor);
     }
 
     public void removeAutor(Autor autor) {
