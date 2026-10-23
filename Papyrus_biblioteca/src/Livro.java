@@ -10,8 +10,8 @@ public class Livro {
     private int anoPublicacao;
     private String isbn;
     private List<Categoria> categorias = new ArrayList<>(); //Lista de categorias do livro
-    private List<Autor> autores = new ArrayList<>();
-    private List<Exemplar> exemplares = new ArrayList<>(); //associação por composição com Exemplar
+    private List<Autor> autores = new ArrayList<>(); //Lista de autores do livro
+    private List<Exemplar> exemplares = new ArrayList<>(); //Lista de exemplares do livro
 
     public Livro() {
     }
@@ -74,7 +74,7 @@ public class Livro {
         this.isbn = isbn;
     }
 
-    public List<Categoria> getCategoria() { return categorias; }
+    public List<Categoria> getCategorias() { return categorias; }
 
     //Metodo para adicionar uma categoria ao livro
     public void addCategoria(Categoria categoria) {
@@ -115,7 +115,8 @@ public class Livro {
 
     //(2)Metodo para adicionar exemplares
     public void addExemplar(Exemplar exemplar) {
-        if (exemplar != null) {
+        if (exemplar != null && !exemplares.contains(exemplar)) {
+            exemplar.setIdExemplar(exemplares.size() + 1);
             exemplar.setLivro(this);
             exemplares.add(exemplar);
         }
