@@ -4,38 +4,124 @@ import java.util.Scanner;
 
 public class MenuPapyrus {
 
-    private String nome;
-    private String tipo;
     private Scanner scanner;
     private Acervo acervo = new Acervo();
 
-    public void exibirResultados(List<Livro> resultados) {
-        if (resultados.isEmpty()) {
-            System.out.println("Nenhum livro encontrado.");
-            return;
-        }
+    public MenuPapyrus() {
+        this.scanner = new Scanner(System.in);
+    }
 
-        System.out.println("\n--- LIVROS ENCONTRADOS ---");
+    public void exibirMenuPrincipal() {
+        int opcao = 0;
+        do {
+            System.out.println("\n===== SISTEMA PAPYRUS =====");
+            System.out.println("1. Acessar o Sistema");
+            System.out.println("0. Sair do Sistema");
+            opcao = lerOpcao("Opção: ", 0, 1);
 
-        for (Livro livro : resultados) {
-            System.out.println(livro);
+            if (opcao == 1) {
+                direcionarMenu();
+            } else {
+                System.out.println("\nSaindo do sistema Papyrus... Até logo!");
+            }
+        } while (opcao != 0);
+    }
+
+    public void direcionarMenu() {
+        System.out.println("\n===== ESCOLHA O PERFIL DE ACESSO =====");
+        System.out.println("1. Leitor");
+        System.out.println("2. Funcionário");
+        System.out.println("3. Administrador");
+        System.out.println("0. Voltar ao menu principal");
+
+        int opcao = lerOpcao("Opção: ", 0, 3);
+
+        switch (opcao) {
+            case 1:
+                exibirMenuLeitor();
+                break;
+            case 2:
+                exibirMenuFuncionario();
+                break;
+            case 3:
+                exibirMenuAdministrador();
+                break;
+            case 0:
+                System.out.println("Retornando ao menu principal...");
+                break;
         }
     }
 
+    public void exibirMenuLeitor() {
+        int opcao = 0;
+        do {
+            System.out.println("\n--- MENU DO LEITOR ---");
+            System.out.println("1. Consultar Acervo");
+            System.out.println("2. Meus Empréstimos");
+            System.out.println("0. Voltar ao Menu Principal");
+            opcao = lerOpcao("Opção: ", 0, 2);
 
-    public void consultarLivros() {
-        System.out.println("\n--- CONSULTAR LIVROS ---");
+            if (opcao == 1) {
+                consultarAcervo();
+            } else if (opcao == 2) {
+                consultarMeusEmprestimos();
+            } else if (opcao == 0) {
+                System.out.println("Voltando ao menu principal...");
+            }
+        } while (opcao != 0);
+    }
 
-        List<Livro> livros = acervo.consultarLivros();
+    public void exibirMenuFuncionario() {
+        int opcao = 0;
+        do {
+            System.out.println("\n--- MENU DO FUNCIONARIO ---");
+            System.out.println("1. Registrar Empréstimo");
+            System.out.println("2. Registrar Devolução");
+            System.out.println("3. Consultar Acervo");
+            System.out.println("4. Consultar Empréstimos");
+            System.out.println("0. Voltar ao Menu Principal");
+            opcao = lerOpcao("Opção: ", 0, 4);
 
-        if (livros.isEmpty()) {
-            System.out.println("Nenhum livro cadastrado.");
-            return;
-        }
+            if (opcao == 1) {
+                registrarEmprestimo();
+            } else if (opcao == 2) {
+                registrarDevolucao();
+            } else if (opcao == 3) {
+                consultarAcervo();
+            } else if (opcao == 4) {
+                consultarEmprestimos();
+            } else if (opcao == 0) {
+                System.out.println("Voltando ao menu principal...");
+            }
+        } while (opcao != 0);
+    }
 
-        for (Livro livro : livros) {
-            System.out.println(livro);
-        }
+    public void exibirMenuAdministrador() {
+        int opcao = 0;
+        do {
+            System.out.println("\n--- MENU DO ADMINISTRADOR ---");
+            System.out.println("1. Gerenciar Usuários");
+            System.out.println("2. Gerenciar Livros");
+            System.out.println("3. Gerenciar Categorias");
+            System.out.println("4. Gerenciar Autores");
+            System.out.println("5. Gerenciar Exemplares");
+            System.out.println("0. Voltar ao Menu Principal");
+            opcao = lerOpcao("Opção: ", 0, 5);
+
+            if (opcao == 1) {
+                gerenciarUsuarios();
+            } else if (opcao == 2) {
+                gerenciarLivros();
+            } else if (opcao == 3) {
+                gerenciarCategorias();
+            } else if (opcao == 4) {
+                gerenciarAutores();
+            } else if (opcao == 5) {
+                gerenciarExemplares();
+            } else if (opcao == 0) {
+                System.out.println("Voltando ao menu principal...");
+            }
+        } while (opcao != 0);
     }
 
     public void gerenciarLivros() {
@@ -46,9 +132,7 @@ public class MenuPapyrus {
             System.out.println("1. Cadastrar Livro");
             System.out.println("2. Consultar Livros");
             System.out.println("0. Voltar");
-            System.out.print("Opção: ");
-
-            opcao = Integer.parseInt(scanner.nextLine());
+            opcao = lerOpcao("Opção: ", 0, 2);
 
             switch (opcao) {
                 case 1:
@@ -60,16 +144,8 @@ public class MenuPapyrus {
                 case 0:
                     System.out.println("Voltando ao menu do administrador...");
                     break;
-                default:
-                    System.out.println("Opção inválida!");
             }
         } while (opcao != 0);
-    }
-
-    public MenuPapyrus() {
-        this.scanner = new Scanner(System.in);
-        this.nome = "";
-        this.tipo = "";
     }
 
     public void cadastrarLivro() {
@@ -84,8 +160,7 @@ public class MenuPapyrus {
         System.out.print("Edição: ");
         String edicao = scanner.nextLine();
 
-        System.out.print("Ano de publicação: ");
-        int ano = Integer.parseInt(scanner.nextLine());
+        int ano = lerOpcao("Ano de publicação: ", 1, 9999);
 
         System.out.print("ISBN: ");
         String isbn = scanner.nextLine();
@@ -123,11 +198,10 @@ public class MenuPapyrus {
             }
 
             System.out.println("0. Finalizar seleção");
-            System.out.print("Escolha o número do autor: ");
 
-            opcao = Integer.parseInt(scanner.nextLine());
+            opcao = lerOpcao("Escolha o número do autor: ", 0, autores.size());
 
-            if (opcao > 0 && opcao <= autores.size()) {
+            if (opcao != 0) {
                 Autor autor = autores.get(opcao - 1);
 
                 if (livro.getAutores().contains(autor)) {
@@ -138,8 +212,6 @@ public class MenuPapyrus {
                     livro.addAutor(autor);
                     System.out.println("Autor associado com sucesso!");
                 }
-            } else if (opcao != 0) {
-                System.out.println("Opção inválida.");
             }
 
         } while (opcao != 0 && livro.getAutores().size() < 3);
@@ -163,11 +235,10 @@ public class MenuPapyrus {
             }
 
             System.out.println("0. Finalizar seleção");
-            System.out.print("Escolha o número da categoria: ");
 
-            opcao = Integer.parseInt(scanner.nextLine());
+            opcao = lerOpcao("Escolha o número da categoria: ", 0, categorias.size());
 
-            if (opcao > 0 && opcao <= categorias.size()) {
+            if (opcao != 0) {
                 Categoria categoria = categorias.get(opcao - 1);
 
                 if (livro.getCategorias().contains(categoria)) {
@@ -176,10 +247,65 @@ public class MenuPapyrus {
                     livro.addCategoria(categoria);
                     System.out.println("Categoria associada com sucesso!");
                 }
-            } else if (opcao != 0) {
-                System.out.println("Opção inválida.");
             }
 
+        } while (opcao != 0);
+    }
+
+    public void consultarLivros() {
+        System.out.println("\n--- CONSULTAR LIVROS ---");
+
+        List<Livro> livros = acervo.consultarLivros();
+
+        if (livros.isEmpty()) {
+            System.out.println("Nenhum livro cadastrado.");
+            return;
+        }
+
+        for (Livro livro : livros) {
+            System.out.println(livro);
+        }
+    }
+
+    public void consultarAcervo() {
+        System.out.println("\n--- CONSULTAR ACERVO ---");
+        System.out.print("Digite o título ou parte dele: ");
+
+        String titulo = scanner.nextLine();
+
+        List<Livro> resultados = acervo.buscarLivrosPorTitulo(titulo);
+
+        if (resultados.isEmpty()) {
+            System.out.println("Nenhum livro encontrado.");
+            return;
+        }
+
+        for (Livro livro : resultados) {
+            System.out.println(livro);
+        }
+    }
+
+    public void gerenciarCategorias() {
+        int opcao = -1;
+
+        do {
+            System.out.println("\n--- GERENCIAR CATEGORIAS ---");
+            System.out.println("1. Cadastrar Categoria");
+            System.out.println("2. Consultar Categorias");
+            System.out.println("0. Voltar");
+            opcao = lerOpcao("Opção: ", 0, 2);
+
+            switch (opcao) {
+                case 1:
+                    cadastrarCategoria();
+                    break;
+                case 2:
+                    consultarCategorias();
+                    break;
+                case 0:
+                    System.out.println("Voltando ao menu do administrador...");
+                    break;
+            }
         } while (opcao != 0);
     }
 
@@ -187,10 +313,10 @@ public class MenuPapyrus {
         System.out.println("\n--- CADASTRAR CATEGORIA ---");
 
         System.out.print("Nome da categoria: ");
-        String nome = scanner.nextLine();
+        String nomeCategoria = scanner.nextLine();
 
         Categoria categoria = new Categoria();
-        categoria.setNomeCategoria(nome);
+        categoria.setNomeCategoria(nomeCategoria);
 
         if (acervo.cadastrarCategoria(categoria)) {
             System.out.println("Categoria cadastrada com sucesso!");
@@ -217,31 +343,28 @@ public class MenuPapyrus {
         }
     }
 
-    public void gerenciarCategorias() {
+    public void gerenciarAutores() {
         int opcao = -1;
 
         do {
-            System.out.println("\n--- GERENCIAR CATEGORIAS ---");
-            System.out.println("1. Cadastrar Categoria");
-            System.out.println("2. Consultar Categorias");
+            System.out.println("\n--- GERENCIAR AUTORES ---");
+            System.out.println("1. Cadastrar Autor");
+            System.out.println("2. Consultar Autores");
             System.out.println("0. Voltar");
-            System.out.print("Opção: ");
-
-            opcao = Integer.parseInt(scanner.nextLine());
+            opcao = lerOpcao("Opção: ", 0, 2);
 
             switch (opcao) {
                 case 1:
-                    cadastrarCategoria();
+                    cadastrarAutor();
                     break;
                 case 2:
-                    consultarCategorias();
+                    consultarAutores();
                     break;
                 case 0:
                     System.out.println("Voltando ao menu do administrador...");
                     break;
-                default:
-                    System.out.println("Opção inválida!");
             }
+
         } while (opcao != 0);
     }
 
@@ -277,35 +400,6 @@ public class MenuPapyrus {
         }
     }
 
-    public void gerenciarAutores() {
-        int opcao = -1;
-
-        do {
-            System.out.println("\n--- GERENCIAR AUTORES ---");
-            System.out.println("1. Cadastrar Autor");
-            System.out.println("2. Consultar Autores");
-            System.out.println("0. Voltar");
-            System.out.print("Opção: ");
-
-            opcao = Integer.parseInt(scanner.nextLine());
-
-            switch (opcao) {
-                case 1:
-                    cadastrarAutor();
-                    break;
-                case 2:
-                    consultarAutores();
-                    break;
-                case 0:
-                    System.out.println("Voltando ao menu do administrador...");
-                    break;
-                default:
-                    System.out.println("Opção inválida.");
-            }
-
-        } while (opcao != 0);
-    }
-
     public void gerenciarExemplares() {
         int opcao = -1;
 
@@ -314,9 +408,7 @@ public class MenuPapyrus {
             System.out.println("1. Cadastrar Exemplar");
             System.out.println("2. Consultar Exemplares");
             System.out.println("0. Voltar");
-            System.out.print("Opção: ");
-
-            opcao = Integer.parseInt(scanner.nextLine());
+            opcao = lerOpcao("Opção: ", 0, 2);
 
             switch (opcao) {
                 case 1:
@@ -328,8 +420,6 @@ public class MenuPapyrus {
                 case 0:
                     System.out.println("Voltando ao menu do administrador...");
                     break;
-                default:
-                    System.out.println("Opção inválida.");
             }
 
         } while (opcao != 0);
@@ -351,13 +441,7 @@ public class MenuPapyrus {
             System.out.println((i + 1) + ". " + livros.get(i).getTitulo());
         }
 
-        System.out.print("Número do livro: ");
-        int opcaoLivro = Integer.parseInt(scanner.nextLine());
-
-        if (opcaoLivro < 1 || opcaoLivro > livros.size()) {
-            System.out.println("Opção inválida.");
-            return;
-        }
+        int opcaoLivro = lerOpcao("Escolha o livro: ", 1, livros.size());
 
         Livro livro = livros.get(opcaoLivro - 1);
 
@@ -371,25 +455,16 @@ public class MenuPapyrus {
         System.out.println("1. Novo");
         System.out.println("2. Bom");
         System.out.println("3. Danificado");
-        System.out.print("Opção: ");
-        int opcaoEstado = Integer.parseInt(scanner.nextLine());
+        int opcaoEstado = lerOpcao("Escolha o estado de conservação: ", 1, 3);
 
-        Exemplar.EstadoConservacao estado;
-
-        switch (opcaoEstado) {
-            case 1:
-                estado = Exemplar.EstadoConservacao.NOVO;
-                break;
-            case 2:
-                estado = Exemplar.EstadoConservacao.BOM;
-                break;
-            case 3:
-                estado = Exemplar.EstadoConservacao.DANIFICADO;
-                break;
-            default:
-                System.out.println("Opção de conservação inválida.");
-                return;
-        }
+        Exemplar.EstadoConservacao estado = switch (opcaoEstado) {
+            case 1 -> Exemplar.EstadoConservacao.NOVO;
+            case 2 -> Exemplar.EstadoConservacao.BOM;
+            case 3 -> Exemplar.EstadoConservacao.DANIFICADO;
+            default -> throw new IllegalStateException(
+                    "Opção de conservação inesperada: " + opcaoEstado
+            );
+        };
 
         Exemplar exemplar = new Exemplar();
         exemplar.setNumeroTombo(numeroTombo);
@@ -428,30 +503,36 @@ public class MenuPapyrus {
         }
     }
 
-    public void consultarAcervo() {
-        System.out.println("\n--- CONSULTAR ACERVO ---");
-        System.out.print("Digite o título ou parte dele: ");
+    public void gerenciarUsuarios() {
+        int opcao = -1;
 
-        String titulo = scanner.nextLine();
+        do {
+            System.out.println("\n--- GERENCIAR USUÁRIOS ---");
+            System.out.println("1. Cadastrar Usuário");
+            System.out.println("2. Consultar Usuários");
+            System.out.println("0. Voltar");
+            opcao = lerOpcao("Opção: ", 0, 2);
 
-        List<Livro> resultados = acervo.buscarLivrosPorTitulo(titulo);
+            switch (opcao) {
+                case 1:
+                    cadastrarUsuario();
+                    break;
+                case 2:
+                    consultarUsuarios();
+                    break;
+                case 0:
+                    System.out.println("Voltando ao menu do administrador...");
+                    break;
+            }
 
-        if (resultados.isEmpty()) {
-            System.out.println("Nenhum livro encontrado.");
-            return;
-        }
-
-        for (Livro livro : resultados) {
-            System.out.println(livro);
-        }
+        } while (opcao != 0);
     }
-
 
     public void cadastrarUsuario() {
         System.out.println("\n--- CADASTRAR USUÁRIO ---");
 
         System.out.print("Nome: ");
-        String nome = scanner.nextLine();
+        String nomeUsuario = scanner.nextLine();
 
         System.out.print("CPF: ");
         String cpf = scanner.nextLine();
@@ -469,29 +550,19 @@ public class MenuPapyrus {
         System.out.println("1. Funcionário");
         System.out.println("2. Leitor");
         System.out.println("3. Administrador");
-        System.out.print("Opção: ");
+        int opcaoTipo = lerOpcao("Opção: ", 1, 3);
 
-        int opcaoTipo = Integer.parseInt(scanner.nextLine());
-
-        Usuario.TipoUsuario tipo;
-
-        switch (opcaoTipo) {
-            case 1:
-                tipo = Usuario.TipoUsuario.FUNCIONARIO;
-                break;
-            case 2:
-                tipo = Usuario.TipoUsuario.LEITOR;
-                break;
-            case 3:
-                tipo = Usuario.TipoUsuario.ADMINISTRADOR;
-                break;
-            default:
-                System.out.println("Tipo de usuário inválido.");
-                return;
-        }
+        Usuario.TipoUsuario tipo = switch (opcaoTipo) {
+            case 1 -> Usuario.TipoUsuario.FUNCIONARIO;
+            case 2 -> Usuario.TipoUsuario.LEITOR;
+            case 3 -> Usuario.TipoUsuario.ADMINISTRADOR;
+            default -> throw new IllegalStateException(
+                    "Tipo de usuário inesperado: " + opcaoTipo
+            );
+        };
 
         Usuario usuario = new Usuario();
-        usuario.setNomeUsuario(nome);
+        usuario.setNomeUsuario(nomeUsuario);
         usuario.setCpf(cpf);
         usuario.setTelefoneUsuario(telefone);
         usuario.setEnderecoUsuario(endereco);
@@ -523,203 +594,340 @@ public class MenuPapyrus {
         }
     }
 
-    public void gerenciarUsuarios() {
-        int opcao = -1;
+    public Usuario selecionarUsuario() {
+        List<Usuario> usuarios = acervo.consultarUsuarios();
 
-        do {
-            System.out.println("\n--- GERENCIAR USUÁRIOS ---");
-            System.out.println("1. Cadastrar Usuário");
-            System.out.println("2. Consultar Usuários");
-            System.out.println("0. Voltar");
-            System.out.print("Opção: ");
+        if (usuarios.isEmpty()) {
+            System.out.println("Nenhum usuário cadastrado.");
+            return null;
+        }
 
-            opcao = Integer.parseInt(scanner.nextLine());
+        System.out.println("\n--- SELECIONAR USUÁRIO ---");
 
-            switch (opcao) {
-                case 1:
-                    cadastrarUsuario();
-                    break;
-                case 2:
-                    consultarUsuarios();
-                    break;
-                case 0:
-                    System.out.println("Voltando ao menu do administrador...");
-                    break;
-                default:
-                    System.out.println("Opção inválida.");
+        for (int i = 0; i < usuarios.size(); i++) {
+            Usuario usuario = usuarios.get(i);
+
+            System.out.println(
+                    (i + 1) + ". " + usuario.getNomeUsuario()
+                            + " - CPF: " + usuario.getCpf()
+            );
+        }
+
+        System.out.println("0. Cancelar");
+
+        int opcao = lerOpcao("Escolha o usuário: ", 0, usuarios.size());
+
+        if (opcao == 0) {
+            return null;
+        }
+
+        return usuarios.get(opcao - 1);
+    }
+
+    public List<Exemplar> selecionarExemplares(Usuario usuario) {
+        List<Exemplar> selecionados = new ArrayList<>();
+
+        int pendentes = acervo.contarExemplaresPendentes(usuario);
+        int limite = 3 - pendentes;
+
+        if (limite <= 0) {
+            System.out.println(
+                    "O usuário já possui 3 exemplares pendentes."
+            );
+            return selecionados;
+        }
+
+        List<Exemplar> disponiveis = new ArrayList<>();
+
+        for (Livro livro : acervo.consultarLivros()) {
+            for (Exemplar exemplar : livro.getExemplares()) {
+                if (exemplar.getSituacao()
+                        == Exemplar.Situacao.DISPONIVEL) {
+                    disponiveis.add(exemplar);
+                }
+            }
+        }
+
+        if (disponiveis.isEmpty()) {
+            System.out.println("Nenhum exemplar disponível.");
+            return selecionados;
+        }
+
+        while (selecionados.size() < limite) {
+            System.out.println("\n--- EXEMPLARES DISPONÍVEIS ---");
+
+            for (int i = 0; i < disponiveis.size(); i++) {
+                Exemplar exemplar = disponiveis.get(i);
+
+                if (!selecionados.contains(exemplar)) {
+                    System.out.println(
+                            (i + 1) + ". "
+                                    + exemplar.getLivro().getTitulo()
+                                    + " | Tombo: " + exemplar.getNumeroTombo()
+                                    + " | Localização: "
+                                    + exemplar.getLocalizacaoEstante()
+                    );
+                }
             }
 
-        } while (opcao != 0);
+            System.out.println("0. Finalizar seleção");
+
+            int opcao = lerOpcao("Opção: ", 0, disponiveis.size());
+
+            if (opcao == 0) {
+                break;
+            }
+
+            Exemplar exemplar = disponiveis.get(opcao - 1);
+
+            if (selecionados.contains(exemplar)) {
+                System.out.println("Esse exemplar já foi selecionado.");
+            } else {
+                selecionados.add(exemplar);
+                System.out.println("Exemplar selecionado.");
+            }
+        }
+
+        return selecionados;
     }
 
-    public String getNome() {
-        return nome;
-    }
+    public void registrarEmprestimo() {
+        System.out.println("\n--- REGISTRAR EMPRÉSTIMO ---");
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
+        Usuario usuario = selecionarUsuario();
 
-    public String getTipo() {
-        return tipo;
-    }
+        if (usuario == null) {
+            System.out.println("Operação cancelada.");
+            return;
+        }
 
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
+        if (usuario.getStatusCadastro() != Usuario.StatusCadastro.ATIVO) {
+            System.out.println("O usuário não está ativo.");
+            return;
+        }
 
-    public Scanner getScanner() {
-        return scanner;
-    }
+        List<Exemplar> exemplares = selecionarExemplares(usuario);
 
-    public void setScanner(Scanner scanner) {
-        this.scanner = scanner;
-    }
+        if (exemplares.isEmpty()) {
+            System.out.println("Nenhum exemplar selecionado.");
+            return;
+        }
 
-    public void lerNome() {
-        System.out.print("Digite seu nome: ");
-        setNome(scanner.nextLine());
-    }
+        boolean registrado = acervo.registrarEmprestimo(usuario, exemplares);
 
-    public void lerTipo() {
-        System.out.println("Escolha o tipo de usuário:");
-        System.out.println("1 - Funcionário");
-        System.out.println("2 - Leitor");
-        System.out.println("3 - Administrador");
-        System.out.print("Opção: ");
-        int opcao = Integer.parseInt(scanner.nextLine());
-
-        if (opcao == 1) {
-            setTipo("Funcionário");
-        } else if (opcao == 2) {
-            setTipo("Leitor");
-        } else if (opcao == 3) {
-            setTipo("Administrador");
+        if (registrado) {
+            System.out.println("Empréstimo registrado com sucesso!");
+            System.out.println("Usuário: " + usuario.getNomeUsuario());
+            System.out.println("Quantidade de exemplares: " + exemplares.size());
+            System.out.println("Data do empréstimo: " + java.time.LocalDate.now());
+            System.out.println(
+                    "Prazo para devolução: "
+                            + java.time.LocalDate.now().plusDays(10)
+            );
         } else {
-            setTipo("Inválido");
+            System.out.println(
+                    "Não foi possível registrar o empréstimo. "
+                            + "Verifique o limite e a disponibilidade dos exemplares."
+            );
         }
     }
 
-    public void exibirMenuPrincipal() {
-        int opcao = 0;
-        do {
-            System.out.println("\n===== SISTEMA PAPYRUS =====");
-            System.out.println("1. Acessar o Sistema");
-            System.out.println("0. Sair do Sistema");
-            System.out.print("Opção: ");
-            opcao = Integer.parseInt(scanner.nextLine());
+    public void registrarDevolucao() {
+        System.out.println("\n--- REGISTRAR DEVOLUÇÃO ---");
 
-            if (opcao == 1) {
-                lerNome();
-                lerTipo();
-                System.out.println("\n>> " + toString());
-                direcionarMenu();
-            } else if (opcao == 0) {
-                System.out.println("\nSaindo do sistema Papyrus... Até logo!");
-            } else {
-                System.out.println("\nOpção inválida! Tente novamente.");
+        List<ItemEmprestimo> itens = acervo.consultarItensEmprestimo();
+        List<ItemEmprestimo> pendentes = new ArrayList<>();
+
+        for (ItemEmprestimo item : itens) {
+            if (item.getStatusItemEmprestimo()
+                    == ItemEmprestimo.StatusItemEmprestimo.EMPRESTADO) {
+                pendentes.add(item);
             }
-        } while (opcao != 0);
-    }
+        }
 
-    public void direcionarMenu() {
-        if (getTipo().equals("Funcionario")) {
-            exibirMenuFuncionario();
-        } else if (getTipo().equals("Leitor")) {
-            exibirMenuLeitor();
-        } else if (getTipo().equals("Administrador")) {
-            exibirMenuAdministrador();
+        if (pendentes.isEmpty()) {
+            System.out.println("Não há exemplares pendentes de devolução.");
+            return;
+        }
+
+        System.out.println("\n--- EXEMPLARES PENDENTES ---");
+
+        for (int i = 0; i < pendentes.size(); i++) {
+            ItemEmprestimo item = pendentes.get(i);
+
+            System.out.println(
+                    (i + 1) + ". "
+                            + "Usuário: "
+                            + item.getEmprestimo().getUsuario().getNomeUsuario()
+                            + " | Livro: "
+                            + item.getExemplar().getLivro().getTitulo()
+                            + " | Tombo: "
+                            + item.getExemplar().getNumeroTombo()
+                            + " | Devolução prevista: "
+                            + item.getDataPrevistaDevolucao()
+            );
+        }
+
+        System.out.println("0. Cancelar");
+
+        int opcao = lerOpcao("Selecione o exemplar a ser devolvido:", 0, pendentes.size());
+
+        if (opcao == 0) {
+            System.out.println("Operação cancelada.");
+            return;
+        }
+
+        ItemEmprestimo item = pendentes.get(opcao - 1);
+
+        boolean devolvido = item.devolver(java.time.LocalDate.now());
+
+        if (devolvido) {
+            System.out.println("Devolução registrada com sucesso!");
+            System.out.println(
+                    "Livro: " + item.getExemplar().getLivro().getTitulo()
+            );
+            System.out.println(
+                    "Data da devolução: " + item.getDataEfetivaDevolucao()
+            );
         } else {
-            System.out.println("Tipo de usuário inválido. Retornando ao menu principal.");
+            System.out.println("Não foi possível registrar a devolução.");
         }
     }
 
-    public void exibirMenuFuncionario() {
-        int opcao = 0;
-        do {
-            System.out.println("\n--- MENU DO FUNCIONARIO ---");
-            System.out.println("Usuário: " + getNome());
-            System.out.println("1. Registrar Empréstimo");
-            System.out.println("2. Registrar Devolução");
-            System.out.println("3. Consultar Acervo");
-            System.out.println("0. Voltar ao Menu Principal");
-            System.out.print("Opção: ");
-            opcao = Integer.parseInt(scanner.nextLine());
+    public void consultarEmprestimos() {
+        System.out.println("\n--- CONSULTAR EMPRÉSTIMOS ---");
 
-            if (opcao == 1) {
-                System.out.println(">> Registrando emprestimo...");
-            } else if (opcao == 2) {
-                System.out.println(">> Registrando devolucao...");
-            } else if (opcao == 3) {
-                consultarAcervo();
-            } else if (opcao == 0) {
-                System.out.println("Voltando ao menu principal...");
-            } else {
-                System.out.println("Opção inválida!");
+        List<Emprestimo> emprestimos = acervo.consultarEmprestimos();
+
+        if (emprestimos.isEmpty()) {
+            System.out.println("Nenhum empréstimo registrado.");
+            return;
+        }
+
+        for (Emprestimo emprestimo : emprestimos) {
+            System.out.println("\nID do empréstimo: "
+                    + emprestimo.getIdEmprestimo());
+
+            System.out.println("Usuário: "
+                    + emprestimo.getUsuario().getNomeUsuario());
+
+            System.out.println("Data do empréstimo: "
+                    + emprestimo.getDataEmprestimo());
+
+            System.out.println("--- ITENS DO EMPRÉSTIMO ---");
+
+            for (ItemEmprestimo item : acervo.consultarItensEmprestimo()) {
+                if (item.getEmprestimo() == emprestimo) {
+                    System.out.println("Livro: "
+                            + item.getExemplar().getLivro().getTitulo());
+
+                    System.out.println("Número de tombo: "
+                            + item.getExemplar().getNumeroTombo());
+
+                    System.out.println("Data prevista de devolução: "
+                            + item.getDataPrevistaDevolucao());
+
+                    System.out.println("Data efetiva de devolução: "
+                            + (item.getDataEfetivaDevolucao() == null
+                            ? "Ainda não devolvido"
+                            : item.getDataEfetivaDevolucao()));
+
+                    System.out.println("Status: "
+                            + item.getStatusItemEmprestimo().getDescricao());
+
+                    System.out.println("-----------------------------");
+                }
             }
-        } while (opcao != 0);
+        }
     }
 
-    public void exibirMenuLeitor() {
-        int opcao = 0;
-        do {
-            System.out.println("\n--- MENU DO LEITOR ---");
-            System.out.println("Usuário: " + getNome());
-            System.out.println("1. Consultar Acervo");
-            System.out.println("2. Meus Empréstimos");
-            System.out.println("3. Reservar Livro");
-            System.out.println("0. Voltar ao Menu Principal");
-            System.out.print("Opção: ");
-            opcao = Integer.parseInt(scanner.nextLine());
+    public void consultarMeusEmprestimos() {
+        System.out.println("\n--- MEUS EMPRÉSTIMOS ---");
 
-            if (opcao == 1) {
-                consultarAcervo();
-            } else if (opcao == 2) {
-                System.out.println(">> Exibindo meus empréstimos...");
-            } else if (opcao == 3) {
-                System.out.println(">> Reservando livro...");
-            } else if (opcao == 0) {
-                System.out.println("Voltando ao menu principal...");
-            } else {
-                System.out.println("Opção inválida!");
+        int idUsuario = lerOpcao("Digite o ID do leitor: ", 1, Integer.MAX_VALUE);
+        Usuario usuario = null;
+
+        for (Usuario cadastrado : acervo.consultarUsuarios()) {
+            if (cadastrado.getIdUsuario() == idUsuario
+                    && cadastrado.getTipoUsuario() == Usuario.TipoUsuario.LEITOR) {
+                usuario = cadastrado;
+                break;
             }
-        } while (opcao != 0);
+        }
+
+        if (usuario == null) {
+            System.out.println(
+                    "Nenhum leitor cadastrado corresponde ao ID informado."
+            );
+            return;
+        }
+
+        List<ItemEmprestimo> itens = acervo.consultarItensEmprestimo();
+        boolean encontrou = false;
+
+        for (ItemEmprestimo item : itens) {
+            if (item.getEmprestimo() != null
+                    && item.getEmprestimo().getUsuario() == usuario) {
+
+                if (!encontrou) {
+                    System.out.println(
+                            "Leitor: " + usuario.getNomeUsuario()
+                    );
+                    encontrou = true;
+                }
+
+                System.out.println("\nLivro: "
+                        + item.getExemplar().getLivro().getTitulo());
+
+                System.out.println("Número de tombo: "
+                        + item.getExemplar().getNumeroTombo());
+
+                System.out.println("Data do empréstimo: "
+                        + item.getEmprestimo().getDataEmprestimo());
+
+                System.out.println("Data prevista de devolução: "
+                        + item.getDataPrevistaDevolucao());
+
+                System.out.println("Data efetiva de devolução: "
+                        + (item.getDataEfetivaDevolucao() == null
+                        ? "Ainda não devolvido"
+                        : item.getDataEfetivaDevolucao()));
+
+                System.out.println("Status: "
+                        + item.getStatusItemEmprestimo().getDescricao());
+
+                System.out.println("-----------------------------");
+            }
+        }
+
+        if (!encontrou) {
+            System.out.println("Você ainda não possui empréstimos registrados.");
+        }
     }
 
-    public void exibirMenuAdministrador() {
-        int opcao = 0;
-        do {
-            System.out.println("\n--- MENU DO ADMINISTRADOR ---");
-            System.out.println("Usuário: " + getNome());
-            System.out.println("1. Gerenciar Usuários");
-            System.out.println("2. Gerenciar Livros");
-            System.out.println("3. Gerenciar Categorias");
-            System.out.println("4. Gerenciar Autores");
-            System.out.println("5. Gerenciar Exemplares");
-            System.out.println("0. Voltar ao Menu Principal");
-            System.out.print("Opção: ");
-            opcao = Integer.parseInt(scanner.nextLine());
+    public int lerOpcao(String mensagem, int minimo, int maximo) {
+        while (true) {
+            System.out.print(mensagem);
+            String entrada = scanner.nextLine().trim();
 
-            if (opcao == 1) {
-                gerenciarUsuarios();
-            } else if (opcao == 2) {
-                gerenciarLivros();
-            } else if (opcao == 3) {
-                gerenciarCategorias();
-            } else if (opcao == 4) {
-                gerenciarAutores();
-            } else if (opcao == 5) {
-                gerenciarExemplares();
-            } else if (opcao == 0) {
-                System.out.println("Voltando ao menu principal...");
-            } else {
-                System.out.println("Opção inválida!");
+            try {
+                int opcao = Integer.parseInt(entrada);
+
+                if (opcao < minimo || opcao > maximo) {
+                    System.out.println(
+                            "Opção inválida! Digite um número entre "
+                                    + minimo + " e " + maximo + "."
+                    );
+                    continue;
+                }
+
+                return opcao;
+
+            } catch (NumberFormatException e) {
+                System.out.println(
+                        "Entrada inválida! Digite apenas um número inteiro."
+                );
             }
-        } while (opcao != 0);
-    }
-
-    @Override
-    public String toString() {
-        return "Usuário: " + getNome() + " | Tipo: " + getTipo();
+        }
     }
 }
