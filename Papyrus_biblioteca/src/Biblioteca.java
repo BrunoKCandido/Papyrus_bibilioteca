@@ -1,11 +1,11 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Acervo {
+public class Biblioteca {
 
-    private List<Livro> livros = new ArrayList<>(); //Lista de livros do acervo
-    private List<Autor> autores = new ArrayList<>(); //Lista de autores do acervo
-    private List<Categoria> categorias = new ArrayList<>(); //Lista de categorias do acervo//
+    private List<Livro> livros = new ArrayList<>(); //Lista de livros da biblioteca
+    private List<Autor> autores = new ArrayList<>(); //Lista de autores da biblioteca
+    private List<Categoria> categorias = new ArrayList<>(); //Lista de categorias da biblioteca
     private List<Usuario> usuarios = new ArrayList<>(); //Lista de usuários da biblioteca
     private List<Emprestimo> emprestimos = new ArrayList<>();
     private List<ItemEmprestimo> itensEmprestimo = new ArrayList<>();

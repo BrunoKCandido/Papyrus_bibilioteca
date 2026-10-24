@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class MenuPapyrus {
 
     private Scanner scanner;
-    private Acervo acervo = new Acervo();
+    private Biblioteca biblioteca = new Biblioteca();
 
     public MenuPapyrus() {
         this.scanner = new Scanner(System.in);
@@ -172,7 +172,7 @@ public class MenuPapyrus {
         associarAutores(livro);
         associarCategorias(livro);
 
-        if (acervo.cadastrarLivro(livro)) {
+        if (biblioteca.cadastrarLivro(livro)) {
             System.out.println("Livro cadastrado com sucesso!");
             System.out.println("ID gerado: " + livro.getIdLivro());
         } else {
@@ -181,7 +181,7 @@ public class MenuPapyrus {
     }
 
     public void associarAutores(Livro livro) {
-        List<Autor> autores = acervo.consultarAutores();
+        List<Autor> autores = biblioteca.consultarAutores();
 
         if (autores.isEmpty()) {
             System.out.println("Nenhum autor cadastrado.");
@@ -218,7 +218,7 @@ public class MenuPapyrus {
     }
 
     public void associarCategorias(Livro livro) {
-        List<Categoria> categorias = acervo.consultarCategorias();
+        List<Categoria> categorias = biblioteca.consultarCategorias();
 
         if (categorias.isEmpty()) {
             System.out.println("Nenhuma categoria cadastrada.");
@@ -255,7 +255,7 @@ public class MenuPapyrus {
     public void consultarLivros() {
         System.out.println("\n--- CONSULTAR LIVROS ---");
 
-        List<Livro> livros = acervo.consultarLivros();
+        List<Livro> livros = biblioteca.consultarLivros();
 
         if (livros.isEmpty()) {
             System.out.println("Nenhum livro cadastrado.");
@@ -273,7 +273,7 @@ public class MenuPapyrus {
 
         String titulo = scanner.nextLine();
 
-        List<Livro> resultados = acervo.buscarLivrosPorTitulo(titulo);
+        List<Livro> resultados = biblioteca.buscarLivrosPorTitulo(titulo);
 
         if (resultados.isEmpty()) {
             System.out.println("Nenhum livro encontrado.");
@@ -318,7 +318,7 @@ public class MenuPapyrus {
         Categoria categoria = new Categoria();
         categoria.setNomeCategoria(nomeCategoria);
 
-        if (acervo.cadastrarCategoria(categoria)) {
+        if (biblioteca.cadastrarCategoria(categoria)) {
             System.out.println("Categoria cadastrada com sucesso!");
             System.out.println("ID gerado: " + categoria.getIdCategoria());
         } else {
@@ -331,7 +331,7 @@ public class MenuPapyrus {
     public void consultarCategorias() {
         System.out.println("\n--- CONSULTAR CATEGORIAS ---");
 
-        List<Categoria> categorias = acervo.consultarCategorias();
+        List<Categoria> categorias = biblioteca.consultarCategorias();
 
         if (categorias.isEmpty()) {
             System.out.println("Nenhuma categoria cadastrada.");
@@ -377,7 +377,7 @@ public class MenuPapyrus {
         Autor autor = new Autor();
         autor.setNomeAutor(nomeAutor);
 
-        if (acervo.cadastrarAutor(autor)) {
+        if (biblioteca.cadastrarAutor(autor)) {
             System.out.println("Autor cadastrado com sucesso!");
             System.out.println("ID gerado: " + autor.getIdAutor());
         } else {
@@ -388,7 +388,7 @@ public class MenuPapyrus {
     public void consultarAutores() {
         System.out.println("\n--- CONSULTAR AUTORES ---");
 
-        List<Autor> autores = acervo.consultarAutores();
+        List<Autor> autores = biblioteca.consultarAutores();
 
         if (autores.isEmpty()) {
             System.out.println("Nenhum autor cadastrado.");
@@ -428,7 +428,7 @@ public class MenuPapyrus {
     public void cadastrarExemplar() {
         System.out.println("\n--- CADASTRAR EXEMPLAR ---");
 
-        List<Livro> livros = acervo.consultarLivros();
+        List<Livro> livros = biblioteca.consultarLivros();
 
         if (livros.isEmpty()) {
             System.out.println("Nenhum livro cadastrado. Cadastre um livro antes de adicionar exemplares.");
@@ -481,7 +481,7 @@ public class MenuPapyrus {
     public void consultarExemplares() {
         System.out.println("\n--- CONSULTAR EXEMPLARES ---");
 
-        List<Livro> livros = acervo.consultarLivros();
+        List<Livro> livros = biblioteca.consultarLivros();
 
         boolean encontrouExemplar = false;
 
@@ -571,7 +571,7 @@ public class MenuPapyrus {
         usuario.setDataCadastro(java.time.LocalDate.now());
         usuario.setStatusCadastro(Usuario.StatusCadastro.ATIVO);
 
-        if (acervo.cadastrarUsuario(usuario)) {
+        if (biblioteca.cadastrarUsuario(usuario)) {
             System.out.println("Usuário cadastrado com sucesso!");
             System.out.println("ID gerado: " + usuario.getIdUsuario());
         } else {
@@ -582,7 +582,7 @@ public class MenuPapyrus {
     public void consultarUsuarios() {
         System.out.println("\n--- CONSULTAR USUÁRIOS ---");
 
-        List<Usuario> usuarios = acervo.consultarUsuarios();
+        List<Usuario> usuarios = biblioteca.consultarUsuarios();
 
         if (usuarios.isEmpty()) {
             System.out.println("Nenhum usuário cadastrado.");
@@ -595,7 +595,7 @@ public class MenuPapyrus {
     }
 
     public Usuario selecionarUsuario() {
-        List<Usuario> usuarios = acervo.consultarUsuarios();
+        List<Usuario> usuarios = biblioteca.consultarUsuarios();
 
         if (usuarios.isEmpty()) {
             System.out.println("Nenhum usuário cadastrado.");
@@ -627,7 +627,7 @@ public class MenuPapyrus {
     public List<Exemplar> selecionarExemplares(Usuario usuario) {
         List<Exemplar> selecionados = new ArrayList<>();
 
-        int pendentes = acervo.contarExemplaresPendentes(usuario);
+        int pendentes = biblioteca.contarExemplaresPendentes(usuario);
         int limite = 3 - pendentes;
 
         if (limite <= 0) {
@@ -639,7 +639,7 @@ public class MenuPapyrus {
 
         List<Exemplar> disponiveis = new ArrayList<>();
 
-        for (Livro livro : acervo.consultarLivros()) {
+        for (Livro livro : biblioteca.consultarLivros()) {
             for (Exemplar exemplar : livro.getExemplares()) {
                 if (exemplar.getSituacao()
                         == Exemplar.Situacao.DISPONIVEL) {
@@ -701,11 +701,6 @@ public class MenuPapyrus {
             return;
         }
 
-        if (usuario.getStatusCadastro() != Usuario.StatusCadastro.ATIVO) {
-            System.out.println("O usuário não está ativo.");
-            return;
-        }
-
         List<Exemplar> exemplares = selecionarExemplares(usuario);
 
         if (exemplares.isEmpty()) {
@@ -713,7 +708,7 @@ public class MenuPapyrus {
             return;
         }
 
-        boolean registrado = acervo.registrarEmprestimo(usuario, exemplares);
+        boolean registrado = biblioteca.registrarEmprestimo(usuario, exemplares);
 
         if (registrado) {
             System.out.println("Empréstimo registrado com sucesso!");
@@ -735,7 +730,7 @@ public class MenuPapyrus {
     public void registrarDevolucao() {
         System.out.println("\n--- REGISTRAR DEVOLUÇÃO ---");
 
-        List<ItemEmprestimo> itens = acervo.consultarItensEmprestimo();
+        List<ItemEmprestimo> itens = biblioteca.consultarItensEmprestimo();
         List<ItemEmprestimo> pendentes = new ArrayList<>();
 
         for (ItemEmprestimo item : itens) {
@@ -797,7 +792,7 @@ public class MenuPapyrus {
     public void consultarEmprestimos() {
         System.out.println("\n--- CONSULTAR EMPRÉSTIMOS ---");
 
-        List<Emprestimo> emprestimos = acervo.consultarEmprestimos();
+        List<Emprestimo> emprestimos = biblioteca.consultarEmprestimos();
 
         if (emprestimos.isEmpty()) {
             System.out.println("Nenhum empréstimo registrado.");
@@ -816,7 +811,7 @@ public class MenuPapyrus {
 
             System.out.println("--- ITENS DO EMPRÉSTIMO ---");
 
-            for (ItemEmprestimo item : acervo.consultarItensEmprestimo()) {
+            for (ItemEmprestimo item : biblioteca.consultarItensEmprestimo()) {
                 if (item.getEmprestimo() == emprestimo) {
                     System.out.println("Livro: "
                             + item.getExemplar().getLivro().getTitulo());
@@ -847,7 +842,7 @@ public class MenuPapyrus {
         int idUsuario = lerOpcao("Digite o ID do leitor: ", 1, Integer.MAX_VALUE);
         Usuario usuario = null;
 
-        for (Usuario cadastrado : acervo.consultarUsuarios()) {
+        for (Usuario cadastrado : biblioteca.consultarUsuarios()) {
             if (cadastrado.getIdUsuario() == idUsuario
                     && cadastrado.getTipoUsuario() == Usuario.TipoUsuario.LEITOR) {
                 usuario = cadastrado;
@@ -862,7 +857,7 @@ public class MenuPapyrus {
             return;
         }
 
-        List<ItemEmprestimo> itens = acervo.consultarItensEmprestimo();
+        List<ItemEmprestimo> itens = biblioteca.consultarItensEmprestimo();
         boolean encontrou = false;
 
         for (ItemEmprestimo item : itens) {
