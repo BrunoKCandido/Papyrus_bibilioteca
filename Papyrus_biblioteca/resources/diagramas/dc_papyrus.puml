@@ -1,0 +1,203 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+class Autor {
+    - idAutor: int
+    - nomeAutor: String
+}
+
+class Categoria {
+    - idcategoria: int
+    - nomeCategoria: String
+}
+
+class Livro {
+    - idLivro: int
+    - titulo: String
+    - editora: String
+    - edicao: String
+    - anoPublicacao: int
+    - isbn: String
+    - categorias : List<Categoria>
+    - autores : List<Autor>
+    - exemplares: List<Exemplar>
+
+    + addAutor(autor : Autor) : void
+    + removeAutor(autor : Autor) : void
+    + addCategoria(categoria : Categoria) : void
+    + removeCategoria(categoria : Categoria) : void
+    + addExemplar(exemplar : Exemplar) : void
+}
+
+class Exemplar {
+    - idExemplar : int
+    - livro : Livro
+    - numeroTombo : String
+    - localizacaoEstante : String
+    - estadoConservacao : EstadoConservacao
+    - situacao : Situacao
+}
+
+enum EstadoConservacao {
+    NOVO
+    BOM
+    DANIFICADO
+}
+
+enum Situacao {
+    DISPONIVEL
+    EMPRESTADO
+    EM_MANUTENCAO
+    PERDIDO
+}
+
+class ItemEmprestimo {
+    - idItemEmprestimo : int
+    - emprestimo : Emprestimo
+    - exemplar : Exemplar
+    - dataPrevistaDevolucao : LocalDate
+    - dataEfetivaDevolucao : LocalDate
+    - statusItemEmprestimo : StatusItemEmprestimo
+
+    + devolver(dataDevolucao : LocalDate) : boolean
+}
+
+enum StatusItemEmprestimo {
+    EMPRESTADO
+    DEVOLVIDO
+    ATRASADO
+}
+
+class Emprestimo {
+    - idEmprestimo : int
+    - usuario : Usuario
+    - dataEmprestimo : LocalDate
+}
+
+class Usuario {
+    - idUsuario : int
+    - nomeUsuario : String
+    - cpf : String
+    - telefoneUsuario : String
+    - enderecoUsuario : String
+    - email : String
+    - tipoUsuario : TipoUsuario
+    - dataCadastro : LocalDate
+    - statusCadastro : StatusCadastro
+}
+
+enum TipoUsuario {
+    FUNCIONARIO
+    LEITOR
+    ADMINISTRADOR
+}
+
+enum StatusCadastro {
+    ATIVO
+    SUSPENSO
+}
+
+class Biblioteca {
+    - livros : List<Livro>
+    - autores : List<Autor>
+    - categorias : List<Categoria>
+    - usuarios : List<Usuario>
+    - emprestimos : List<Emprestimo>
+    - itensEmprestimo : List<ItemEmprestimo>
+    - proximoIdLivro : int
+    - proximoIdAutor : int
+    - proximoIdCategoria : int
+    - proximoIdUsuario : int
+    - proximoIdEmprestimo : int
+    - proximoIdItemEmprestimo : int
+
+    + cadastrarLivro(livro : Livro) : boolean
+    + consultarLivros() : List<Livro>
+    + buscarLivrosPorTitulo(titulo : String) : List<Livro>
+
+    + cadastrarAutor(autor : Autor) : boolean
+    + consultarAutores() : List<Autor>
+
+    + cadastrarCategoria(categoria : Categoria) : boolean
+    + consultarCategorias() : List<Categoria>
+
+    + cadastrarUsuario(usuario : Usuario) : boolean
+    + consultarUsuarios() : List<Usuario>
+
+    + cadastrarEmprestimo(emprestimo : Emprestimo) : boolean
+    + consultarEmprestimos() : List<Emprestimo>
+
+    + cadastrarItemEmprestimo(item : ItemEmprestimo) : boolean
+    + consultarItensEmprestimo() : List<ItemEmprestimo>
+
+    + contarExemplaresPendentes(usuario : Usuario) : int
+    + podeRealizarEmprestimo(usuario : Usuario, quantidade : int) : boolean
+    + registrarEmprestimo(usuario : Usuario, exemplares : List<Exemplar>) : boolean
+}
+
+class MenuPapyrus {
+    - scanner : Scanner
+    - biblioteca : Biblioteca
+
+    + MenuPapyrus()
+
+    + exibirMenuPrincipal() : void
+    + direcionarMenu() : void
+    + exibirMenuLeitor() : void
+    + exibirMenuFuncionario() : void
+    + exibirMenuAdministrador() : void
+
+    + gerenciarLivros() : void
+    + cadastrarLivro() : void
+    + selecionarLivro() : Livro
+    + associarAutores(livro : Livro) : void
+    + associarCategorias(livro : Livro) : void
+    + consultarLivros() : void
+    + consultarAcervo() : void
+
+    + gerenciarCategorias() : void
+    + cadastrarCategoria() : void
+    + consultarCategorias() : void
+
+    + gerenciarAutores() : void
+    + cadastrarAutor() : void
+    + consultarAutores() : void
+
+    + gerenciarExemplares() : void
+    + cadastrarExemplar() : void
+    + consultarExemplares() : void
+
+    + gerenciarUsuarios() : void
+    + cadastrarUsuario() : void
+    + consultarUsuarios() : void
+    + selecionarUsuario() : Usuario
+
+    + selecionarExemplares(usuario : Usuario) : List<Exemplar>
+    + registrarEmprestimo() : void
+    + registrarDevolucao() : void
+    + consultarEmprestimos() : void
+    + consultarMeusEmprestimos() : void
+
+    + lerOpcao(mensagem : String, minimo : int, maximo : int) : int
+}
+
+Livro "0..*" --> "0..3" Autor
+Livro "0..*" --> "0..*" Categoria
+Livro "1" *-- "0..*" Exemplar
+Exemplar --> EstadoConservacao
+Exemplar --> Situacao
+Emprestimo "0..*" -- "1..*" Exemplar
+(Emprestimo, Exemplar) .. ItemEmprestimo
+ItemEmprestimo --> StatusItemEmprestimo
+Usuario "1" <-- "0..*" Emprestimo
+Usuario --> TipoUsuario
+Usuario --> StatusCadastro
+Biblioteca "1" --> "0..*" Livro
+Biblioteca "1" --> "0..*" Autor
+Biblioteca "1" --> "0..*" Categoria
+Biblioteca "1" --> "0..*" Usuario
+Biblioteca "1" --> "0..*" Emprestimo
+Biblioteca "1" --> "0..*" ItemEmprestimo
+MenuPapyrus --> Biblioteca
+
+@enduml
