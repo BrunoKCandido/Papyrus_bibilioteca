@@ -17,16 +17,6 @@ public class Biblioteca {
     private int proximoIdEmprestimo = 1;
     private int proximoIdItemEmprestimo = 1;
 
-    public Livro buscarLivroPorId(int id) {
-        for (Livro livro : livros) {
-            if (livro.getIdLivro() == id) {
-                return livro;
-            }
-        }
-
-        return null;
-    }
-
     public List<Livro> buscarLivrosPorTitulo(String titulo) {
         List<Livro> resultado = new ArrayList<>();
 
@@ -43,7 +33,7 @@ public class Biblioteca {
     }
 
     public boolean cadastrarLivro(Livro livro) {
-        if (livro == null) {
+        if (livro == null || livros.contains(livro)) {
             return false;
         }
 
@@ -60,7 +50,7 @@ public class Biblioteca {
 
 
     public boolean cadastrarAutor(Autor autor) {
-        if (autor == null) {
+        if (autor == null || autores.contains(autor)) {
             return false;
         }
 
@@ -76,15 +66,8 @@ public class Biblioteca {
     }
 
     public boolean cadastrarCategoria(Categoria categoria) {
-        if (categoria == null) {
+        if (categoria == null || categorias.contains(categoria)) {
             return false;
-        }
-
-        for (Categoria existente : categorias) {
-            if (existente.getNomeCategoria()
-                    .equalsIgnoreCase(categoria.getNomeCategoria())) {
-                return false;
-            }
         }
 
         categoria.setIdCategoria(proximoIdCategoria);
@@ -99,7 +82,7 @@ public class Biblioteca {
     }
 
     public boolean cadastrarUsuario(Usuario usuario) {
-        if (usuario == null) {
+        if (usuario == null || usuarios.contains(usuario)) {
             return false;
         }
 

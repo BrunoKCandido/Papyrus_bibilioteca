@@ -28,12 +28,11 @@ public class ItemEmprestimo {
     public ItemEmprestimo() {
     }
 
-    public ItemEmprestimo(int idItemEmprestimo, Emprestimo emprestimo,
+    public ItemEmprestimo(Emprestimo emprestimo,
                           Exemplar exemplar,
                           LocalDate dataPrevistaDevolucao,
                           LocalDate dataEfetivaDevolucao,
                           StatusItemEmprestimo statusItemEmprestimo) {
-        this.idItemEmprestimo = idItemEmprestimo;
         this.emprestimo = emprestimo;
         this.exemplar = exemplar;
         this.dataPrevistaDevolucao = dataPrevistaDevolucao;

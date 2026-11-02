@@ -9,8 +9,7 @@ public class Emprestimo {
     public Emprestimo() {
     }
 
-    public Emprestimo(int idEmprestimo, Usuario usuario, LocalDate dataEmprestimo) {
-        this.idEmprestimo = idEmprestimo;
+    public Emprestimo(Usuario usuario, LocalDate dataEmprestimo) {
         this.usuario = usuario;
         this.dataEmprestimo = dataEmprestimo;
     }
@@ -48,6 +47,3 @@ public class Emprestimo {
                 ']';
     }
 }
-
-
-

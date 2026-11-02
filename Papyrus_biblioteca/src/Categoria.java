@@ -6,8 +6,7 @@ public class Categoria {
     public Categoria() {
     }
 
-    public Categoria(int idCategoria, String nomeCategoria) {
-        this.idCategoria = idCategoria;
+    public Categoria(String nomeCategoria) {
         this.nomeCategoria = nomeCategoria;
     }
 
@@ -33,5 +32,21 @@ public class Categoria {
                 "idCategoria=" + idCategoria +
                 ", nomeCategoria='" + nomeCategoria + '\'' +
                 ']';
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        Categoria categoria = (Categoria) obj;
+        return nomeCategoria != null &&
+                categoria.nomeCategoria != null &&
+                nomeCategoria.trim().equalsIgnoreCase(categoria.nomeCategoria.trim());
+    }
+
+    @Override
+    public int hashCode() {
+        return nomeCategoria == null ? 0 :
+                nomeCategoria.trim().toLowerCase().hashCode();
     }
 }

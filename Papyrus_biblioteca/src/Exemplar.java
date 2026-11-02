@@ -44,10 +44,8 @@ public class Exemplar {
     public Exemplar() {
     }
 
-    public Exemplar(int idExemplar, Livro livro, String numeroTombo, String localizacaoEstante,
+    public Exemplar(String numeroTombo, String localizacaoEstante,
                     EstadoConservacao estadoConservacao, Situacao situacao) {
-        this.idExemplar = idExemplar;
-        this.livro = livro;
         this.numeroTombo = numeroTombo;
         this.localizacaoEstante = localizacaoEstante;
         this.estadoConservacao = estadoConservacao;

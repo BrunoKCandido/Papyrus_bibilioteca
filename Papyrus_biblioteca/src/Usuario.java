@@ -47,7 +47,6 @@ public class Usuario {
     }
 
     public Usuario(
-            int idUsuario,
             String nomeUsuario,
             String cpf,
             String telefoneUsuario,
@@ -57,7 +56,6 @@ public class Usuario {
             LocalDate dataCadastro,
             StatusCadastro statusCadastro
     ) {
-        this.idUsuario = idUsuario;
         this.nomeUsuario = nomeUsuario;
         this.cpf = cpf;
         this.telefoneUsuario = telefoneUsuario;
@@ -153,5 +151,22 @@ public class Usuario {
                 ", dataCadastro=" + dataCadastro +
                 ", statusCadastro=" + statusCadastro +
                 ']';
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        Usuario usuario = (Usuario) obj;
+
+        return cpf != null &&
+                usuario.cpf != null &&
+                cpf.trim().equals(usuario.cpf.trim());
+    }
+
+    @Override
+    public int hashCode() {
+        return cpf == null ? 0 : cpf.trim().hashCode();
     }
 }

@@ -16,9 +16,8 @@ public class Livro {
     public Livro() {
     }
 
-    public Livro(int idLivro, String titulo, String editora, String edicao,
+    public Livro(String titulo, String editora, String edicao,
                  int anoPublicacao, String isbn) {
-        this.idLivro = idLivro;
         this.titulo = titulo;
         this.editora = editora;
         this.edicao = edicao;
@@ -94,8 +93,9 @@ public class Livro {
         return autores;
     }
 
+    //Metodo para adicionar um autor ao livro
     public void addAutor(Autor autor) {
-        if (autor == null || this.autores.contains(autor)) {
+        if (autor == null || autores.contains(autor)) {
             return;
         }
         if (this.autores.size() >= 3) {
@@ -105,8 +105,11 @@ public class Livro {
         this.autores.add(autor);
     }
 
+    //Metodo para remover um autor do livro
     public void removeAutor(Autor autor) {
-        this.autores.remove(autor);
+        if (autor != null) {
+            autores.remove(autor);
+        }
     }
 
     //Na composição apenas o metodo getExemplar deve ser implementado (não tem set)
@@ -134,5 +137,23 @@ public class Livro {
                 ", categorias=" + categorias +
                 ", autores=" + autores +
                 ']';
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        Livro livro = (Livro) obj;
+
+        return isbn != null &&
+                livro.isbn != null &&
+                isbn.trim().equalsIgnoreCase(livro.isbn.trim());
+    }
+
+    @Override
+    public int hashCode() {
+        return isbn == null ? 0 :
+                isbn.trim().toLowerCase().hashCode();
     }
 }

@@ -131,8 +131,10 @@ public class MenuPapyrus {
             System.out.println("\n--- GERENCIAR LIVROS ---");
             System.out.println("1. Cadastrar Livro");
             System.out.println("2. Consultar Livros");
+            System.out.println("3. Associar Autores");
+            System.out.println("4. Associar Categorias");
             System.out.println("0. Voltar");
-            opcao = lerOpcao("Opção: ", 0, 2);
+            opcao = lerOpcao("Opção: ", 0, 4);
 
             switch (opcao) {
                 case 1:
@@ -140,6 +142,18 @@ public class MenuPapyrus {
                     break;
                 case 2:
                     consultarLivros();
+                    break;
+                case 3:
+                    Livro livroAutor = selecionarLivro();
+                    if (livroAutor != null) {
+                        associarAutores(livroAutor);
+                    }
+                    break;
+                case 4:
+                    Livro livroCategoria = selecionarLivro();
+                    if (livroCategoria != null) {
+                        associarCategorias(livroCategoria);
+                    }
                     break;
                 case 0:
                     System.out.println("Voltando ao menu do administrador...");
@@ -165,9 +179,7 @@ public class MenuPapyrus {
         System.out.print("ISBN: ");
         String isbn = scanner.nextLine();
 
-        Livro livro = new Livro(
-                0, titulo, editora, edicao, ano, isbn
-        );
+        Livro livro = new Livro(titulo, editora, edicao, ano, isbn);
 
         associarAutores(livro);
         associarCategorias(livro);
@@ -176,8 +188,38 @@ public class MenuPapyrus {
             System.out.println("Livro cadastrado com sucesso!");
             System.out.println("ID gerado: " + livro.getIdLivro());
         } else {
-            System.out.println("Não foi possível cadastrar o livro.");
+            System.out.println("Não foi possível cadastrar o livro. Verifique se ele já existe.");
         }
+    }
+
+    public Livro selecionarLivro() {
+        List<Livro> livros = biblioteca.consultarLivros();
+
+        if (livros.isEmpty()) {
+            System.out.println("Nenhum livro cadastrado.");
+            return null;
+        }
+
+        System.out.println("\n--- SELECIONAR LIVRO ---");
+
+        for (int i = 0; i < livros.size(); i++) {
+            Livro livro = livros.get(i);
+
+            System.out.println(
+                    (i + 1) + ". " + livro.getTitulo()
+                            + " (ID: " + livro.getIdLivro() + ")"
+            );
+        }
+
+        System.out.println("0. Cancelar");
+
+        int opcao = lerOpcao("Escolha o livro: ", 0, livros.size());
+
+        if (opcao == 0) {
+            return null;
+        }
+
+        return livros.get(opcao - 1);
     }
 
     public void associarAutores(Livro livro) {
@@ -315,12 +357,11 @@ public class MenuPapyrus {
         System.out.print("Nome da categoria: ");
         String nomeCategoria = scanner.nextLine();
 
-        Categoria categoria = new Categoria();
-        categoria.setNomeCategoria(nomeCategoria);
+        Categoria categoria = new Categoria(nomeCategoria);
 
         if (biblioteca.cadastrarCategoria(categoria)) {
             System.out.println("Categoria cadastrada com sucesso!");
-            System.out.println("ID gerado: " + categoria.getIdCategoria());
+            System.out.println(categoria);
         } else {
             System.out.println(
                     "Não foi possível cadastrar a categoria. Verifique se ela já existe."
@@ -374,14 +415,13 @@ public class MenuPapyrus {
 
         String nomeAutor = scanner.nextLine();
 
-        Autor autor = new Autor();
-        autor.setNomeAutor(nomeAutor);
+        Autor autor = new Autor(nomeAutor);
 
         if (biblioteca.cadastrarAutor(autor)) {
             System.out.println("Autor cadastrado com sucesso!");
-            System.out.println("ID gerado: " + autor.getIdAutor());
+            System.out.println(autor);
         } else {
-            System.out.println("Não foi possível cadastrar o autor.");
+            System.out.println("Não foi possível cadastrar o autor. Verifique se ele já existe.");
         }
     }
 
@@ -561,15 +601,16 @@ public class MenuPapyrus {
             );
         };
 
-        Usuario usuario = new Usuario();
-        usuario.setNomeUsuario(nomeUsuario);
-        usuario.setCpf(cpf);
-        usuario.setTelefoneUsuario(telefone);
-        usuario.setEnderecoUsuario(endereco);
-        usuario.setEmail(email);
-        usuario.setTipoUsuario(tipo);
-        usuario.setDataCadastro(java.time.LocalDate.now());
-        usuario.setStatusCadastro(Usuario.StatusCadastro.ATIVO);
+        Usuario usuario = new Usuario(
+                nomeUsuario,
+                cpf,
+                telefone,
+                endereco,
+                email,
+                tipo,
+                java.time.LocalDate.now(),
+                Usuario.StatusCadastro.ATIVO
+        );
 
         if (biblioteca.cadastrarUsuario(usuario)) {
             System.out.println("Usuário cadastrado com sucesso!");
@@ -717,7 +758,7 @@ public class MenuPapyrus {
             System.out.println("Data do empréstimo: " + java.time.LocalDate.now());
             System.out.println(
                     "Prazo para devolução: "
-                            + java.time.LocalDate.now().plusDays(10)
+                            + java.time.LocalDate.now().plusDays(30)
             );
         } else {
             System.out.println(

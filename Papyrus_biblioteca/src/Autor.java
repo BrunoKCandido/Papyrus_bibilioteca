@@ -1,5 +1,3 @@
-import java.util.Objects;
-
 public class Autor {
 
     private int idAutor;
@@ -8,8 +6,7 @@ public class Autor {
     public Autor() {
     }
 
-    public Autor(int idAutor, String nomeAutor) {
-        this.idAutor = idAutor;
+    public Autor(String nomeAutor) {
         this.nomeAutor = nomeAutor;
     }
 
@@ -41,15 +38,19 @@ public class Autor {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Autor autor = (Autor) o;
-        return idAutor == autor.idAutor;
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        Autor autor = (Autor) obj;
+        return nomeAutor != null &&
+                autor.nomeAutor != null &&
+                nomeAutor.trim().equalsIgnoreCase(autor.nomeAutor.trim());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idAutor);
+        return nomeAutor == null ? 0 :
+                nomeAutor.trim().toLowerCase().hashCode();
     }
 }
