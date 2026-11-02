@@ -186,7 +186,7 @@ Livro "0..*" --> "0..*" Categoria
 Livro "1" *-- "0..*" Exemplar
 Exemplar --> EstadoConservacao
 Exemplar --> Situacao
-Emprestimo "0..*" -- "1..*" Exemplar
+Emprestimo "0..*" *--> "1..*" Exemplar
 (Emprestimo, Exemplar) .. ItemEmprestimo
 ItemEmprestimo --> StatusItemEmprestimo
 Usuario "1" <-- "0..*" Emprestimo
