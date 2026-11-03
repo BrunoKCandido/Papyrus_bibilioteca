@@ -190,7 +190,7 @@ public class Biblioteca {
 
             item.setEmprestimo(emprestimo);
             item.setExemplar(exemplar);
-            item.setDataPrevistaDevolucao(hoje.plusDays(10));
+            item.setDataPrevistaDevolucao(hoje.plusDays(30));
             item.setStatusItemEmprestimo(
                     ItemEmprestimo.StatusItemEmprestimo.EMPRESTADO
             );
