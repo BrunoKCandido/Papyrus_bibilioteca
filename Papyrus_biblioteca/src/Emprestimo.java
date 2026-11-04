@@ -1,10 +1,13 @@
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Emprestimo {
 
     private int idEmprestimo;
-    private Usuario usuario; // atributo de associação unidirecional com a classe Usuario
+    private Usuario usuario; // Associação unidirecional com a classe Usuario
     private LocalDate dataEmprestimo;
+    private List<ItemEmprestimo> itensEmprestimo = new ArrayList<>(); // Associação por composição com ItemEmprestimo
 
     public Emprestimo() {
     }
@@ -36,6 +39,32 @@ public class Emprestimo {
 
     public void setDataEmprestimo(LocalDate dataEmprestimo) {
         this.dataEmprestimo = dataEmprestimo;
+    }
+
+    public boolean adicionarItemEmprestimo(ItemEmprestimo item) {
+        if (item == null || itensEmprestimo.contains(item)) {
+            return false;
+        }
+
+        itensEmprestimo.add(item);
+        item.setEmprestimo(this);
+
+        return true;
+    }
+
+    public boolean removerItemEmprestimo(ItemEmprestimo item) {
+        if (item == null || !itensEmprestimo.contains(item)) {
+            return false;
+        }
+
+        itensEmprestimo.remove(item);
+        item.setEmprestimo(null);
+
+        return true;
+    }
+
+    public List<ItemEmprestimo> consultarItensEmprestimo() {
+        return itensEmprestimo;
     }
 
     @Override

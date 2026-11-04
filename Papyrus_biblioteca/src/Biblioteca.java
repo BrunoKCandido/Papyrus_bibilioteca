@@ -8,7 +8,6 @@ public class Biblioteca {
     private List<Categoria> categorias = new ArrayList<>(); //Lista de categorias da biblioteca
     private List<Usuario> usuarios = new ArrayList<>(); //Lista de usuários da biblioteca
     private List<Emprestimo> emprestimos = new ArrayList<>();
-    private List<ItemEmprestimo> itensEmprestimo = new ArrayList<>();
 
     private int proximoIdLivro = 1;
     private int proximoIdAutor = 1;
@@ -113,30 +112,18 @@ public class Biblioteca {
         return emprestimos;
     }
 
-    public boolean cadastrarItemEmprestimo(ItemEmprestimo item) {
-        if (item == null) {
-            return false;
-        }
-
-        item.setIdItemEmprestimo(proximoIdItemEmprestimo);
-        itensEmprestimo.add(item);
-        proximoIdItemEmprestimo++;
-
-        return true;
-    }
-
-    public List<ItemEmprestimo> consultarItensEmprestimo() {
-        return itensEmprestimo;
-    }
-
     public int contarExemplaresPendentes(Usuario usuario) {
         int quantidade = 0;
 
-        for (ItemEmprestimo item : itensEmprestimo) {
-            if (item.getEmprestimo().getUsuario().equals(usuario)
-                    && item.getStatusItemEmprestimo()
-                    == ItemEmprestimo.StatusItemEmprestimo.EMPRESTADO) {
-                quantidade++;
+        for (Emprestimo emprestimo : emprestimos) {
+            if (emprestimo.getUsuario().equals(usuario)) {
+
+                for (ItemEmprestimo item : emprestimo.consultarItensEmprestimo()) {
+                    if (item.getStatusItemEmprestimo()
+                            == ItemEmprestimo.StatusItemEmprestimo.EMPRESTADO) {
+                        quantidade++;
+                    }
+                }
             }
         }
 
@@ -157,8 +144,7 @@ public class Biblioteca {
         return pendentes + quantidade <= 3;
     }
 
-    public boolean registrarEmprestimo(Usuario usuario,
-                                       List<Exemplar> exemplares) {
+    public boolean registrarEmprestimo(Usuario usuario, List<Exemplar> exemplares) {
 
         if (usuario == null || exemplares == null || exemplares.isEmpty()) {
             return false;
@@ -168,15 +154,19 @@ public class Biblioteca {
             return false;
         }
 
+        // Verifica se todos os exemplares estão disponíveis.
         for (Exemplar exemplar : exemplares) {
+
             if (exemplar == null
-                    || exemplar.getSituacao() != Exemplar.Situacao.DISPONIVEL) {
+                    || exemplar.getSituacao() != Exemplar.Situacao.DISPONIVEL
+                    || exemplares.indexOf(exemplar) != exemplares.lastIndexOf(exemplar)) {
                 return false;
             }
         }
 
         java.time.LocalDate hoje = java.time.LocalDate.now();
 
+        // Cria um único empréstimo.
         Emprestimo emprestimo = new Emprestimo();
         emprestimo.setUsuario(usuario);
         emprestimo.setDataEmprestimo(hoje);
@@ -185,17 +175,22 @@ public class Biblioteca {
             return false;
         }
 
+        // Cria um item para cada exemplar, associando todos ao mesmo empréstimo.
         for (Exemplar exemplar : exemplares) {
+
             ItemEmprestimo item = new ItemEmprestimo();
 
-            item.setEmprestimo(emprestimo);
+            item.setIdItemEmprestimo(proximoIdItemEmprestimo);
+            proximoIdItemEmprestimo++;
+
             item.setExemplar(exemplar);
             item.setDataPrevistaDevolucao(hoje.plusDays(30));
             item.setStatusItemEmprestimo(
                     ItemEmprestimo.StatusItemEmprestimo.EMPRESTADO
             );
 
-            cadastrarItemEmprestimo(item);
+            emprestimo.adicionarItemEmprestimo(item);
+
             exemplar.setSituacao(Exemplar.Situacao.EMPRESTADO);
         }
 

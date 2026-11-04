@@ -665,19 +665,30 @@ public class MenuPapyrus {
         return usuarios.get(opcao - 1);
     }
 
-    public List<Exemplar> selecionarExemplares(Usuario usuario) {
-        List<Exemplar> selecionados = new ArrayList<>();
+    public void registrarEmprestimo() {
 
+        System.out.println("\n--- REGISTRAR EMPRÉSTIMO ---");
+
+        Usuario usuario = selecionarUsuario();
+
+        if (usuario == null) {
+            System.out.println("Operação cancelada.");
+            return;
+        }
+
+        // Verifica quantos exemplares o usuário já possui pendentes
         int pendentes = biblioteca.contarExemplaresPendentes(usuario);
+
         int limite = 3 - pendentes;
 
         if (limite <= 0) {
             System.out.println(
                     "O usuário já possui 3 exemplares pendentes."
             );
-            return selecionados;
+            return;
         }
 
+        // Lista os exemplares disponíveis
         List<Exemplar> disponiveis = new ArrayList<>();
 
         for (Livro livro : biblioteca.consultarLivros()) {
@@ -691,76 +702,92 @@ public class MenuPapyrus {
 
         if (disponiveis.isEmpty()) {
             System.out.println("Nenhum exemplar disponível.");
-            return selecionados;
+            return;
         }
 
+        // Armazena os exemplares selecionados
+        List<Exemplar> selecionados = new ArrayList<>();
+
         while (selecionados.size() < limite) {
+
+            List<Exemplar> opcoesDisponiveis = new ArrayList<>();
+
+            for (Exemplar exemplar : disponiveis) {
+                if (!selecionados.contains(exemplar)) {
+                    opcoesDisponiveis.add(exemplar);
+                }
+            }
+
+            if (opcoesDisponiveis.isEmpty()) {
+                System.out.println("Não há mais exemplares disponíveis.");
+                break;
+            }
+
             System.out.println("\n--- EXEMPLARES DISPONÍVEIS ---");
 
-            for (int i = 0; i < disponiveis.size(); i++) {
-                Exemplar exemplar = disponiveis.get(i);
+            for (int i = 0; i < opcoesDisponiveis.size(); i++) {
 
-                if (!selecionados.contains(exemplar)) {
-                    System.out.println(
-                            (i + 1) + ". "
-                                    + exemplar.getLivro().getTitulo()
-                                    + " | Tombo: " + exemplar.getNumeroTombo()
-                                    + " | Localização: "
-                                    + exemplar.getLocalizacaoEstante()
-                    );
-                }
+                Exemplar exemplar = opcoesDisponiveis.get(i);
+
+                System.out.println(
+                        (i + 1) + ". "
+                                + exemplar.getLivro().getTitulo()
+                                + " | Tombo: " + exemplar.getNumeroTombo()
+                                + " | Localização: "
+                                + exemplar.getLocalizacaoEstante()
+                );
             }
 
             System.out.println("0. Finalizar seleção");
 
-            int opcao = lerOpcao("Opção: ", 0, disponiveis.size());
+            int opcao = lerOpcao(
+                    "Selecione um exemplar: ",
+                    0,
+                    opcoesDisponiveis.size()
+            );
 
             if (opcao == 0) {
                 break;
             }
 
-            Exemplar exemplar = disponiveis.get(opcao - 1);
+            Exemplar exemplarSelecionado =
+                    opcoesDisponiveis.get(opcao - 1);
 
-            if (selecionados.contains(exemplar)) {
-                System.out.println("Esse exemplar já foi selecionado.");
-            } else {
-                selecionados.add(exemplar);
-                System.out.println("Exemplar selecionado.");
-            }
+            selecionados.add(exemplarSelecionado);
+
+            System.out.println("Exemplar selecionado com sucesso!");
+            System.out.println(
+                    "Quantidade selecionada: "
+                            + selecionados.size() + "/" + limite
+            );
         }
 
-        return selecionados;
-    }
-
-    public void registrarEmprestimo() {
-        System.out.println("\n--- REGISTRAR EMPRÉSTIMO ---");
-
-        Usuario usuario = selecionarUsuario();
-
-        if (usuario == null) {
-            System.out.println("Operação cancelada.");
-            return;
-        }
-
-        List<Exemplar> exemplares = selecionarExemplares(usuario);
-
-        if (exemplares.isEmpty()) {
+        if (selecionados.isEmpty()) {
             System.out.println("Nenhum exemplar selecionado.");
             return;
         }
 
-        boolean registrado = biblioteca.registrarEmprestimo(usuario, exemplares);
+        // Registra todos os exemplares em um único empréstimo
+        boolean registrado =
+                biblioteca.registrarEmprestimo(usuario, selecionados);
 
         if (registrado) {
-            System.out.println("Empréstimo registrado com sucesso!");
+
+            System.out.println("\nEmpréstimo registrado com sucesso!");
             System.out.println("Usuário: " + usuario.getNomeUsuario());
-            System.out.println("Quantidade de exemplares: " + exemplares.size());
-            System.out.println("Data do empréstimo: " + java.time.LocalDate.now());
+            System.out.println(
+                    "Quantidade de exemplares: " + selecionados.size()
+            );
+            System.out.println(
+                    "Data do empréstimo: " + java.time.LocalDate.now()
+            );
             System.out.println(
                     "Prazo para devolução: "
                             + java.time.LocalDate.now().plusDays(30)
             );
+
         } else {
+
             System.out.println(
                     "Não foi possível registrar o empréstimo. "
                             + "Verifique o limite e a disponibilidade dos exemplares."
@@ -771,13 +798,16 @@ public class MenuPapyrus {
     public void registrarDevolucao() {
         System.out.println("\n--- REGISTRAR DEVOLUÇÃO ---");
 
-        List<ItemEmprestimo> itens = biblioteca.consultarItensEmprestimo();
         List<ItemEmprestimo> pendentes = new ArrayList<>();
 
-        for (ItemEmprestimo item : itens) {
-            if (item.getStatusItemEmprestimo()
-                    == ItemEmprestimo.StatusItemEmprestimo.EMPRESTADO) {
-                pendentes.add(item);
+        for (Emprestimo emprestimo : biblioteca.consultarEmprestimos()) {
+
+            for (ItemEmprestimo item : emprestimo.consultarItensEmprestimo()) {
+
+                if (item.getStatusItemEmprestimo()
+                        == ItemEmprestimo.StatusItemEmprestimo.EMPRESTADO) {
+                    pendentes.add(item);
+                }
             }
         }
 
@@ -852,27 +882,26 @@ public class MenuPapyrus {
 
             System.out.println("--- ITENS DO EMPRÉSTIMO ---");
 
-            for (ItemEmprestimo item : biblioteca.consultarItensEmprestimo()) {
-                if (item.getEmprestimo() == emprestimo) {
-                    System.out.println("Livro: "
-                            + item.getExemplar().getLivro().getTitulo());
+            for (ItemEmprestimo item : emprestimo.consultarItensEmprestimo()) {
 
-                    System.out.println("Número de tombo: "
-                            + item.getExemplar().getNumeroTombo());
+                System.out.println("Livro: "
+                        + item.getExemplar().getLivro().getTitulo());
 
-                    System.out.println("Data prevista de devolução: "
-                            + item.getDataPrevistaDevolucao());
+                System.out.println("Número de tombo: "
+                        + item.getExemplar().getNumeroTombo());
 
-                    System.out.println("Data efetiva de devolução: "
-                            + (item.getDataEfetivaDevolucao() == null
-                            ? "Ainda não devolvido"
-                            : item.getDataEfetivaDevolucao()));
+                System.out.println("Data prevista de devolução: "
+                        + item.getDataPrevistaDevolucao());
 
-                    System.out.println("Status: "
-                            + item.getStatusItemEmprestimo().getDescricao());
+                System.out.println("Data efetiva de devolução: "
+                        + (item.getDataEfetivaDevolucao() == null
+                        ? "Ainda não devolvido"
+                        : item.getDataEfetivaDevolucao()));
 
-                    System.out.println("-----------------------------");
-                }
+                System.out.println("Status: "
+                        + item.getStatusItemEmprestimo().getDescricao());
+
+                System.out.println("-----------------------------");
             }
         }
     }
@@ -898,41 +927,43 @@ public class MenuPapyrus {
             return;
         }
 
-        List<ItemEmprestimo> itens = biblioteca.consultarItensEmprestimo();
         boolean encontrou = false;
 
-        for (ItemEmprestimo item : itens) {
-            if (item.getEmprestimo() != null
-                    && item.getEmprestimo().getUsuario() == usuario) {
+        for (Emprestimo emprestimo : biblioteca.consultarEmprestimos()) {
 
-                if (!encontrou) {
-                    System.out.println(
-                            "Leitor: " + usuario.getNomeUsuario()
-                    );
-                    encontrou = true;
+            if (emprestimo.getUsuario() == usuario) {
+
+                for (ItemEmprestimo item : emprestimo.consultarItensEmprestimo()) {
+
+                    if (!encontrou) {
+                        System.out.println(
+                                "Leitor: " + usuario.getNomeUsuario()
+                        );
+                        encontrou = true;
+                    }
+
+                    System.out.println("\nLivro: "
+                            + item.getExemplar().getLivro().getTitulo());
+
+                    System.out.println("Número de tombo: "
+                            + item.getExemplar().getNumeroTombo());
+
+                    System.out.println("Data do empréstimo: "
+                            + emprestimo.getDataEmprestimo());
+
+                    System.out.println("Data prevista de devolução: "
+                            + item.getDataPrevistaDevolucao());
+
+                    System.out.println("Data efetiva de devolução: "
+                            + (item.getDataEfetivaDevolucao() == null
+                            ? "Ainda não devolvido"
+                            : item.getDataEfetivaDevolucao()));
+
+                    System.out.println("Status: "
+                            + item.getStatusItemEmprestimo().getDescricao());
+
+                    System.out.println("-----------------------------");
                 }
-
-                System.out.println("\nLivro: "
-                        + item.getExemplar().getLivro().getTitulo());
-
-                System.out.println("Número de tombo: "
-                        + item.getExemplar().getNumeroTombo());
-
-                System.out.println("Data do empréstimo: "
-                        + item.getEmprestimo().getDataEmprestimo());
-
-                System.out.println("Data prevista de devolução: "
-                        + item.getDataPrevistaDevolucao());
-
-                System.out.println("Data efetiva de devolução: "
-                        + (item.getDataEfetivaDevolucao() == null
-                        ? "Ainda não devolvido"
-                        : item.getDataEfetivaDevolucao()));
-
-                System.out.println("Status: "
-                        + item.getStatusItemEmprestimo().getDescricao());
-
-                System.out.println("-----------------------------");
             }
         }
 
