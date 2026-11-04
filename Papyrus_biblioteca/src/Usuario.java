@@ -1,6 +1,9 @@
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class Usuario {
+
+    private static final DateTimeFormatter FORMATO_DATA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     private int idUsuario;
     private String nomeUsuario;
@@ -148,7 +151,7 @@ public class Usuario {
                 ", enderecoUsuario='" + enderecoUsuario + '\'' +
                 ", email='" + email + '\'' +
                 ", tipoUsuario=" + tipoUsuario +
-                ", dataCadastro=" + dataCadastro +
+                ", dataCadastro=" + dataCadastro.format(FORMATO_DATA) +
                 ", statusCadastro=" + statusCadastro +
                 ']';
     }

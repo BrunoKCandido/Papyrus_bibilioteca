@@ -1,8 +1,11 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.time.format.DateTimeFormatter;
 
 public class MenuPapyrus {
+
+    private static final DateTimeFormatter FORMATO_DATA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     private Scanner scanner;
     private Biblioteca biblioteca = new Biblioteca();
@@ -145,15 +148,11 @@ public class MenuPapyrus {
                     break;
                 case 3:
                     Livro livroAutor = selecionarLivro();
-                    if (livroAutor != null) {
-                        associarAutores(livroAutor);
-                    }
+                    if (livroAutor != null) { associarAutores(livroAutor); }
                     break;
                 case 4:
                     Livro livroCategoria = selecionarLivro();
-                    if (livroCategoria != null) {
-                        associarCategorias(livroCategoria);
-                    }
+                    if (livroCategoria != null) { associarCategorias(livroCategoria); }
                     break;
                 case 0:
                     System.out.println("Voltando ao menu do administrador...");
@@ -205,10 +204,8 @@ public class MenuPapyrus {
         for (int i = 0; i < livros.size(); i++) {
             Livro livro = livros.get(i);
 
-            System.out.println(
-                    (i + 1) + ". " + livro.getTitulo()
-                            + " (ID: " + livro.getIdLivro() + ")"
-            );
+            System.out.println( (i + 1) + ". " + livro.getTitulo()
+                            + " (ID: " + livro.getIdLivro() + ")");
         }
 
         System.out.println("0. Cancelar");
@@ -501,9 +498,7 @@ public class MenuPapyrus {
             case 1 -> Exemplar.EstadoConservacao.NOVO;
             case 2 -> Exemplar.EstadoConservacao.BOM;
             case 3 -> Exemplar.EstadoConservacao.DANIFICADO;
-            default -> throw new IllegalStateException(
-                    "Opção de conservação inesperada: " + opcaoEstado
-            );
+            default -> throw new IllegalStateException("Opção de conservação inesperada: " + opcaoEstado);
         };
 
         Exemplar exemplar = new Exemplar();
@@ -596,9 +591,7 @@ public class MenuPapyrus {
             case 1 -> Usuario.TipoUsuario.FUNCIONARIO;
             case 2 -> Usuario.TipoUsuario.LEITOR;
             case 3 -> Usuario.TipoUsuario.ADMINISTRADOR;
-            default -> throw new IllegalStateException(
-                    "Tipo de usuário inesperado: " + opcaoTipo
-            );
+            default -> throw new IllegalStateException("Tipo de usuário inesperado: " + opcaoTipo);
         };
 
         Usuario usuario = new Usuario(
@@ -648,10 +641,8 @@ public class MenuPapyrus {
         for (int i = 0; i < usuarios.size(); i++) {
             Usuario usuario = usuarios.get(i);
 
-            System.out.println(
-                    (i + 1) + ". " + usuario.getNomeUsuario()
-                            + " - CPF: " + usuario.getCpf()
-            );
+            System.out.println( (i + 1) + ". " + usuario.getNomeUsuario()
+                            + " - CPF: " + usuario.getCpf() );
         }
 
         System.out.println("0. Cancelar");
@@ -682,9 +673,7 @@ public class MenuPapyrus {
         int limite = 3 - pendentes;
 
         if (limite <= 0) {
-            System.out.println(
-                    "O usuário já possui 3 exemplares pendentes."
-            );
+            System.out.println("O usuário já possui 3 exemplares pendentes.");
             return;
         }
 
@@ -729,22 +718,16 @@ public class MenuPapyrus {
 
                 Exemplar exemplar = opcoesDisponiveis.get(i);
 
-                System.out.println(
-                        (i + 1) + ". "
+                System.out.println( (i + 1) + ". "
                                 + exemplar.getLivro().getTitulo()
                                 + " | Tombo: " + exemplar.getNumeroTombo()
                                 + " | Localização: "
-                                + exemplar.getLocalizacaoEstante()
-                );
+                                + exemplar.getLocalizacaoEstante() );
             }
 
             System.out.println("0. Finalizar seleção");
 
-            int opcao = lerOpcao(
-                    "Selecione um exemplar: ",
-                    0,
-                    opcoesDisponiveis.size()
-            );
+            int opcao = lerOpcao("Selecione um exemplar: ", 0, opcoesDisponiveis.size());
 
             if (opcao == 0) {
                 break;
@@ -756,10 +739,7 @@ public class MenuPapyrus {
             selecionados.add(exemplarSelecionado);
 
             System.out.println("Exemplar selecionado com sucesso!");
-            System.out.println(
-                    "Quantidade selecionada: "
-                            + selecionados.size() + "/" + limite
-            );
+            System.out.println("Quantidade selecionada: " + selecionados.size() + "/" + limite);
         }
 
         if (selecionados.isEmpty()) {
@@ -775,23 +755,15 @@ public class MenuPapyrus {
 
             System.out.println("\nEmpréstimo registrado com sucesso!");
             System.out.println("Usuário: " + usuario.getNomeUsuario());
-            System.out.println(
-                    "Quantidade de exemplares: " + selecionados.size()
-            );
-            System.out.println(
-                    "Data do empréstimo: " + java.time.LocalDate.now()
-            );
-            System.out.println(
-                    "Prazo para devolução: "
-                            + java.time.LocalDate.now().plusDays(30)
-            );
+            System.out.println("Quantidade de exemplares: " + selecionados.size());
+            System.out.println("Data do empréstimo: " + java.time.LocalDate.now().format(FORMATO_DATA));
+            System.out.println("Prazo para devolução: "
+                    + java.time.LocalDate.now().plusDays(30).format(FORMATO_DATA));
 
         } else {
 
-            System.out.println(
-                    "Não foi possível registrar o empréstimo. "
-                            + "Verifique o limite e a disponibilidade dos exemplares."
-            );
+            System.out.println("Não foi possível registrar o empréstimo. "
+                            + "Verifique o limite e a disponibilidade dos exemplares.");
         }
     }
 
@@ -821,8 +793,7 @@ public class MenuPapyrus {
         for (int i = 0; i < pendentes.size(); i++) {
             ItemEmprestimo item = pendentes.get(i);
 
-            System.out.println(
-                    (i + 1) + ". "
+            System.out.println( (i + 1) + ". "
                             + "Usuário: "
                             + item.getEmprestimo().getUsuario().getNomeUsuario()
                             + " | Livro: "
@@ -830,8 +801,7 @@ public class MenuPapyrus {
                             + " | Tombo: "
                             + item.getExemplar().getNumeroTombo()
                             + " | Devolução prevista: "
-                            + item.getDataPrevistaDevolucao()
-            );
+                            + item.getDataPrevistaDevolucao().format(FORMATO_DATA) );
         }
 
         System.out.println("0. Cancelar");
@@ -849,12 +819,8 @@ public class MenuPapyrus {
 
         if (devolvido) {
             System.out.println("Devolução registrada com sucesso!");
-            System.out.println(
-                    "Livro: " + item.getExemplar().getLivro().getTitulo()
-            );
-            System.out.println(
-                    "Data da devolução: " + item.getDataEfetivaDevolucao()
-            );
+            System.out.println("Livro: " + item.getExemplar().getLivro().getTitulo());
+            System.out.println("Data da devolução: " + item.getDataEfetivaDevolucao().format(FORMATO_DATA));
         } else {
             System.out.println("Não foi possível registrar a devolução.");
         }
@@ -871,35 +837,28 @@ public class MenuPapyrus {
         }
 
         for (Emprestimo emprestimo : emprestimos) {
-            System.out.println("\nID do empréstimo: "
-                    + emprestimo.getIdEmprestimo());
+            System.out.println("\nID do empréstimo: " + emprestimo.getIdEmprestimo());
 
-            System.out.println("Usuário: "
-                    + emprestimo.getUsuario().getNomeUsuario());
+            System.out.println("Usuário: " + emprestimo.getUsuario().getNomeUsuario());
 
-            System.out.println("Data do empréstimo: "
-                    + emprestimo.getDataEmprestimo());
+            System.out.println("Data do empréstimo: " + emprestimo.getDataEmprestimo().format(FORMATO_DATA));
 
             System.out.println("--- ITENS DO EMPRÉSTIMO ---");
 
             for (ItemEmprestimo item : emprestimo.consultarItensEmprestimo()) {
 
-                System.out.println("Livro: "
-                        + item.getExemplar().getLivro().getTitulo());
+                System.out.println("Livro: " + item.getExemplar().getLivro().getTitulo());
 
-                System.out.println("Número de tombo: "
-                        + item.getExemplar().getNumeroTombo());
+                System.out.println("Número de tombo: " + item.getExemplar().getNumeroTombo());
 
-                System.out.println("Data prevista de devolução: "
-                        + item.getDataPrevistaDevolucao());
+                System.out.println("Data prevista de devolução: " + item.getDataPrevistaDevolucao().format(FORMATO_DATA));
 
                 System.out.println("Data efetiva de devolução: "
                         + (item.getDataEfetivaDevolucao() == null
                         ? "Ainda não devolvido"
-                        : item.getDataEfetivaDevolucao()));
+                        : item.getDataEfetivaDevolucao().format(FORMATO_DATA)));
 
-                System.out.println("Status: "
-                        + item.getStatusItemEmprestimo().getDescricao());
+                System.out.println("Status: " + item.getStatusItemEmprestimo().getDescricao());
 
                 System.out.println("-----------------------------");
             }
@@ -913,17 +872,14 @@ public class MenuPapyrus {
         Usuario usuario = null;
 
         for (Usuario cadastrado : biblioteca.consultarUsuarios()) {
-            if (cadastrado.getIdUsuario() == idUsuario
-                    && cadastrado.getTipoUsuario() == Usuario.TipoUsuario.LEITOR) {
+            if (cadastrado.getIdUsuario() == idUsuario && cadastrado.getTipoUsuario() == Usuario.TipoUsuario.LEITOR) {
                 usuario = cadastrado;
                 break;
             }
         }
 
         if (usuario == null) {
-            System.out.println(
-                    "Nenhum leitor cadastrado corresponde ao ID informado."
-            );
+            System.out.println("Nenhum leitor cadastrado corresponde ao ID informado.");
             return;
         }
 
@@ -936,31 +892,25 @@ public class MenuPapyrus {
                 for (ItemEmprestimo item : emprestimo.consultarItensEmprestimo()) {
 
                     if (!encontrou) {
-                        System.out.println(
-                                "Leitor: " + usuario.getNomeUsuario()
-                        );
+                        System.out.println("Leitor: " + usuario.getNomeUsuario());
                         encontrou = true;
                     }
 
-                    System.out.println("\nLivro: "
-                            + item.getExemplar().getLivro().getTitulo());
+                    System.out.println("\nLivro: " + item.getExemplar().getLivro().getTitulo());
 
-                    System.out.println("Número de tombo: "
-                            + item.getExemplar().getNumeroTombo());
+                    System.out.println("Número de tombo: " + item.getExemplar().getNumeroTombo());
 
-                    System.out.println("Data do empréstimo: "
-                            + emprestimo.getDataEmprestimo());
+                    System.out.println("Data do empréstimo: " + emprestimo.getDataEmprestimo().format(FORMATO_DATA));
 
                     System.out.println("Data prevista de devolução: "
-                            + item.getDataPrevistaDevolucao());
+                            + item.getDataPrevistaDevolucao().format(FORMATO_DATA));
 
                     System.out.println("Data efetiva de devolução: "
                             + (item.getDataEfetivaDevolucao() == null
                             ? "Ainda não devolvido"
-                            : item.getDataEfetivaDevolucao()));
+                            : item.getDataEfetivaDevolucao().format(FORMATO_DATA)));
 
-                    System.out.println("Status: "
-                            + item.getStatusItemEmprestimo().getDescricao());
+                    System.out.println("Status: " + item.getStatusItemEmprestimo().getDescricao());
 
                     System.out.println("-----------------------------");
                 }
@@ -981,19 +931,14 @@ public class MenuPapyrus {
                 int opcao = Integer.parseInt(entrada);
 
                 if (opcao < minimo || opcao > maximo) {
-                    System.out.println(
-                            "Opção inválida! Digite um número entre "
-                                    + minimo + " e " + maximo + "."
-                    );
+                    System.out.println("Opção inválida! Digite um número entre " + minimo + " e " + maximo + ".");
                     continue;
                 }
 
                 return opcao;
 
             } catch (NumberFormatException e) {
-                System.out.println(
-                        "Entrada inválida! Digite apenas um número inteiro."
-                );
+                System.out.println("Entrada inválida! Digite apenas um número inteiro.");
             }
         }
     }
